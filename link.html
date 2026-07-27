@@ -267,12 +267,7 @@
 
     <main class="link-viewport">
         <div class="link-card">
-            <!-- Avatars -->
-            <div class="link-avatars">
-                <div class="avatar-box avatar-crimson">🔥</div>
-                <div class="link-connection-arrow">⟷</div>
-                <div id="service-avatar" class="avatar-box avatar-target">⚡</div>
-            </div>
+
 
             <!-- Dynamic Heading -->
             <h1 id="link-header-title" class="link-title">Link Account</h1>
@@ -282,18 +277,34 @@
 
             <!-- Permissions Box -->
             <div class="permissions-box">
-                <div class="permissions-title">Requested Permissions</div>
+                <div class="permissions-title">This app will be able to</div>
                 <div class="permission-item">
                     <span class="perm-icon">✓</span>
-                    <span>Authenticate Single Sign-On via CrimsonFlame-Official.github.io</span>
+                    <span>Access your display name & profile picture</span>
                 </div>
                 <div class="permission-item">
                     <span class="perm-icon">✓</span>
-                    <span>Synchronize multi-turn chat history & preferences</span>
+                    <span>View your email address</span>
                 </div>
                 <div class="permission-item">
                     <span class="perm-icon">✓</span>
-                    <span>Connect to Horizon Labs PyTorch GPU Clusters</span>
+                    <span>Authenticate via CrimsonFlame SSO</span>
+                </div>
+            </div>
+
+            <div class="permissions-box" style="border-color: rgba(239, 68, 68, 0.2);">
+                <div class="permissions-title" style="color: #f87171;">This app will NOT be able to</div>
+                <div class="permission-item">
+                    <span style="color: #f87171; font-size: 1rem;">✕</span>
+                    <span>Change your password or account settings</span>
+                </div>
+                <div class="permission-item">
+                    <span style="color: #f87171; font-size: 1rem;">✕</span>
+                    <span>Post or act on your behalf</span>
+                </div>
+                <div class="permission-item">
+                    <span style="color: #f87171; font-size: 1rem;">✕</span>
+                    <span>Access private messages or payment info</span>
                 </div>
             </div>
 
