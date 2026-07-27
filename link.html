@@ -356,7 +356,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBSSJKDrFJ1_qlliZqgw34CY2TSaKOxxxM",
@@ -513,6 +513,48 @@
                 pfp: currentUser.photoURL || DEFAULT_PFP
             };
 
+            // 1. Record connected app on user's account
+            var appId = linkKey || (serviceName ? serviceName.toLowerCase().replace(/[^a-z0-9]/g, '_') : 'app_' + Math.random().toString(36).substring(2,8));
+            var appLogoUrl = document.getElementById('service-logo') ? document.getElementById('service-logo').src : DEFAULT_PFP;
+            var displayAppName = serviceName || (document.getElementById('service-name-text') ? document.getElementById('service-name-text').textContent : "Connected App");
+
+            setDoc(doc(db, "users", currentUser.uid, "connected_apps", appId), {
+                linkkey: linkKey || null,
+                appName: displayAppName,
+                appLogo: appLogoUrl,
+                authorizedAt: new Date().toISOString()
+            }, { merge: true }).catch(err => console.warn("Failed to record connected app:", err));
+
+            // 2. Increment analytics on SSO linkkey document
+            if (linkKey) {
+                var ssoRef = doc(db, "sso_links", linkKey);
+                getDoc(ssoRef).then(snap => {
+                    if (snap.exists()) {
+                        var d = snap.data();
+                        var uids = d.authorizedUserUids || {};
+                        uids[currentUser.uid] = true;
+                        updateDoc(ssoRef, {
+                            totalAuthorizations: increment(1),
+                            lastAuthorizedAt: new Date().toISOString(),
+                            authorizedUserUids: uids
+                        }).catch(e => console.warn(e));
+                    }
+                }).catch(e => console.warn(e));
+
+                try {
+                    var cached = localStorage.getItem('cf_sso_key_' + linkKey);
+                    if (cached) {
+                        var item = JSON.parse(cached);
+                        item.totalAuthorizations = (item.totalAuthorizations || 0) + 1;
+                        item.lastAuthorizedAt = new Date().toISOString();
+                        var uids = item.authorizedUserUids || {};
+                        uids[currentUser.uid] = true;
+                        item.authorizedUserUids = uids;
+                        localStorage.setItem('cf_sso_key_' + linkKey, JSON.stringify(item));
+                    }
+                } catch(e) {}
+            }
+
             var successBanner = document.getElementById('success-message');
             if (successBanner) successBanner.style.display = 'block';
 
@@ -527,7 +569,6 @@
                 if (redirectUrl) {
                     window.location.href = redirectUrl + '?cf_auth=success&user_data=' + encodeURIComponent(JSON.stringify(userData));
                 } else {
-                    // No redirect — just show success
                     alert('Account linked successfully!');
                 }
             }, 1200);

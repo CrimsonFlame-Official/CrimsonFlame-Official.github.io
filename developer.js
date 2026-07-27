@@ -117,6 +117,10 @@ window.loadSSOLinks = async function() {
         container.innerHTML = ssoItems.map(item => {
             const linkUrl = `https://crimsonflame-official.github.io/link.html?linkkey=${item.linkkey}`;
             const permsList = (item.permissions || []).map(p => `<li style="font-size: 0.8rem; color: #ede8ea;">✓ ${p}</li>`).join('');
+            
+            const totalAuths = item.totalAuthorizations || 0;
+            const uniqueUsers = item.authorizedUserUids ? Object.keys(item.authorizedUserUids).length : 0;
+            const lastUsed = item.lastAuthorizedAt ? new Date(item.lastAuthorizedAt).toLocaleDateString() + ' ' + new Date(item.lastAuthorizedAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'Never';
 
             return `
                 <div style="background: rgba(22, 12, 16, 0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 12px;">
@@ -127,6 +131,22 @@ window.loadSSOLinks = async function() {
                             <div style="font-size: 0.78rem; color: var(--text-secondary);">${item.redirectUrl ? 'Redirect: ' + item.redirectUrl : 'No default redirect URL'}</div>
                         </div>
                         <button onclick="window.deleteSSOLink('${item.linkkey}')" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; font-weight: 600;">Delete</button>
+                    </div>
+
+                    <!-- Analytics Stats Bar -->
+                    <div style="background: rgba(0,0,0,0.4); padding: 12px 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.06); display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 10px; text-align: center;">
+                        <div>
+                            <div style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 700; margin-bottom: 2px;">Unique Users</div>
+                            <div style="font-size: 1.05rem; font-weight: 800; color: #4ade80;">${uniqueUsers} Users</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 700; margin-bottom: 2px;">Total Auth Uses</div>
+                            <div style="font-size: 1.05rem; font-weight: 800; color: var(--crimson-light);">${totalAuths} Times</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 700; margin-bottom: 2px;">Last Used</div>
+                            <div style="font-size: 0.8rem; font-weight: 600; color: #ede8ea;">${lastUsed}</div>
+                        </div>
                     </div>
 
                     <div style="background: rgba(0,0,0,0.4); padding: 10px 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.06);">

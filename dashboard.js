@@ -163,6 +163,48 @@ window.handleUpload = async function(file, type) {
     setTimeout(() => { sEl.style.display = 'none'; }, 3000);
 };
 
+window.loadConnectedApps = async function() {
+    if (!currentUser) return;
+    const container = document.getElementById('connected-apps-list');
+    if (!container) return;
+
+    try {
+        const snap = await getDocs(collection(db, "users", currentUser.uid, "connected_apps"));
+        const apps = [];
+        snap.forEach(d => apps.push({ id: d.id, ...d.data() }));
+
+        if (apps.length === 0) {
+            container.innerHTML = `<p id="connected-apps-empty" style="color: var(--text-secondary); font-size: 0.85rem; text-align: center; padding: 12px; background: rgba(0,0,0,0.3); border-radius: 10px; border: 1px dashed rgba(255,255,255,0.1);">No connected applications yet.</p>`;
+            return;
+        }
+
+        container.innerHTML = apps.map(app => `
+            <div class="linked-card" style="background: rgba(22, 12, 16, 0.8); border: 1px solid rgba(255,255,255,0.08); padding: 12px 14px;">
+                <img src="${app.appLogo || DEFAULT_PFP}" style="width: 38px; height: 38px; border-radius: 10px; object-fit: cover;">
+                <div style="flex: 1;">
+                    <div style="font-weight: 700; color: #fff; font-size: 0.95rem;">${app.appName || "Connected App"}</div>
+                    <div style="font-size: 0.76rem; color: var(--text-secondary);">Authorized ${app.authorizedAt ? new Date(app.authorizedAt).toLocaleDateString() : 'recently'}</div>
+                </div>
+                <button onclick="window.revokeConnectedApp('${app.id}')" class="btn-danger" style="width: auto; padding: 6px 12px; font-size: 0.78rem;">Revoke Access</button>
+            </div>
+        `).join('');
+    } catch(err) {
+        console.error("Error loading connected apps:", err);
+    }
+};
+
+window.revokeConnectedApp = async function(appId) {
+    if (!currentUser) return;
+    if (!confirm("Are you sure you want to revoke access for this application?")) return;
+    try {
+        await deleteDoc(doc(db, "users", currentUser.uid, "connected_apps", appId));
+        window.showCustomAlert("Application access revoked.");
+        window.loadConnectedApps();
+    } catch(err) {
+        window.showCustomAlert("Failed to revoke access: " + err.message);
+    }
+};
+
 let userDocUnsub = null;
 
 onAuthStateChanged(auth, user => {
@@ -211,6 +253,8 @@ onAuthStateChanged(auth, user => {
                 }
             }
         });
+
+        window.loadConnectedApps();
     } else {
         currentUser = null;
         document.getElementById('login-container').style.display = 'block';
