@@ -45,82 +45,99 @@
         </div>
 
         <!-- Dashboard View -->
-        <div id="dashboard-container" class="dash-card" style="display: none;">
-            <h2>Dashboard</h2>
-            
-            <div class="user-row">
-                <img id="dashboard-pfp-preview" src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
-                <div>
-                    <div class="user-meta">Logged in as</div>
-                    <div id="user-display-email" class="user-email"></div>
-                </div>
+        <div id="dashboard-container" class="dash-card" style="display: none; max-width: 540px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                <h2 style="margin: 0;">Dashboard</h2>
+                <a href="developer.html" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; background: rgba(220, 38, 38, 0.15); border: 1px solid rgba(220, 38, 38, 0.3); border-radius: 10px; color: #fff; text-decoration: none; font-size: 0.85rem; font-weight: 700; transition: all 0.2s;">
+                    🛠️ Developer Portal →
+                </a>
             </div>
-            <button class="btn-danger" onclick="logOutUser()">Sign Out</button>
-            
-            <hr class="divider">
-
-            <form onsubmit="submitProfile(event)">
-                <div id="pfp-drop-zone" class="drop-zone" onclick="document.getElementById('pfp-file-input').click()">
-                    <span>Click or drop an image to change avatar</span>
-                    <input type="file" id="pfp-file-input" accept="image/*" style="display:none;" onchange="handleUpload(event.target.files[0], 'pfp')">
-                </div>
-                <div id="upload-status" class="status-text"></div>
                 
-                <label>Display Name</label>
-                <input type="text" id="display-name" placeholder="Seen by other players">
-
-                <label>Username</label>
-                <input type="text" id="username-input" placeholder="username" style="font-family: monospace;">
-
-                <button type="submit" class="btn-primary">Save Changes</button>
-            </form>
-
-            <hr class="divider">
-
-            <div class="section-header" style="color: #5865F2;">
-                <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png"> 
-                <h3>Discord</h3>
-            </div>
-            
-            <div id="discord-unlinked" style="display: none;">
-                <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 12px;">Link your Discord account via the bot to sync your data.</p>
-                <button class="btn-secondary" onclick="generateDiscordLinkCode()" style="background: #5865F2; color: white; border-color: #5865F2; width: 100%;">Generate Link Code</button>
-                <p id="discord-link-code-display" style="display: none; text-align: center; font-size: 1.1rem; font-family: monospace; background: rgba(12,6,8,0.6); padding: 14px; border-radius: 8px; color: #4ade80; border: 1px dashed #5865F2; margin-top: 10px;"></p>
-            </div>
-            
-            <div id="discord-linked" class="linked-card" style="display: none;">
-                <img id="discord-avatar" src="" style="border: 2px solid #5865F2;">
-                <div style="flex: 1;">
-                    <div class="linked-label">Linked Account</div>
-                    <div id="discord-username" class="linked-name"></div>
+                <div class="user-row">
+                    <img id="dashboard-pfp-preview" src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
+                    <div>
+                        <div class="user-meta">Logged in as</div>
+                        <div id="user-display-email" class="user-email"></div>
+                    </div>
                 </div>
-                <button class="btn-danger" style="width: auto; padding: 6px 12px; font-size: 0.8rem;" onclick="unlinkDiscord()">Unlink</button>
-            </div>
+                <button class="btn-danger" onclick="logOutUser()">Sign Out</button>
+                
+                <hr class="divider">
 
-            <hr class="divider">
+                <form onsubmit="submitProfile(event)">
+                    <div id="pfp-drop-zone" class="drop-zone" onclick="document.getElementById('pfp-file-input').click()">
+                        <span>Click or drop an image to change avatar</span>
+                        <input type="file" id="pfp-file-input" accept="image/*" style="display:none;" onchange="handleUpload(event.target.files[0], 'pfp')">
+                    </div>
+                    <div id="upload-status" class="status-text"></div>
+                    
+                    <label>Display Name</label>
+                    <input type="text" id="display-name" placeholder="Seen by other players">
 
-            <div class="section-header" style="color: #4ade80;">
-                <img src="https://cdn-icons-png.flaticon.com/512/806/806008.png" style="filter: invert(1);"> 
-                <h3>Meta Quest VR</h3>
-            </div>
-            
-            <div id="vr-unlinked">
-                <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 12px;">Enter your 6-digit code from Crimson Protocol to link your VR inventory.</p>
-                <form onsubmit="window.submitVRLinkCode(event)" style="display: flex; gap: 10px;">
-                    <input type="text" id="vr-link-input" placeholder="000000" maxlength="6" style="flex: 1; font-family: monospace; font-size: 1.15rem; text-align: center; letter-spacing: 4px;">
-                    <button type="submit" class="btn-primary" style="width: auto; margin-top: 0; background: #4ade80; color: #000; font-weight: 700; padding: 10px 18px;">Link</button>
+                    <label>Username</label>
+                    <input type="text" id="username-input" placeholder="username" style="font-family: monospace;">
+
+                    <button type="submit" class="btn-primary">Save Changes</button>
                 </form>
-            </div>
 
-            <div id="vr-linked" class="linked-card" style="display: none;">
-                <div style="width: 40px; height: 40px; border-radius: 50%; background: #4ade80; display: flex; align-items: center; justify-content: center;">
-                    <img src="https://cdn-icons-png.flaticon.com/512/806/806008.png" style="width: 20px; filter: invert(1);">
+                <hr class="divider">
+
+                <div class="section-header" style="color: #5865F2;">
+                    <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png"> 
+                    <h3>Discord</h3>
                 </div>
-                <div>
-                    <div class="linked-label">PlayFab Linked</div>
-                    <div id="vr-playfab-id" class="linked-name" style="font-family: monospace;"></div>
+                
+                <div id="discord-unlinked" style="display: none;">
+                    <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 12px;">Link your Discord account via the bot to sync your data.</p>
+                    <button class="btn-secondary" onclick="generateDiscordLinkCode()" style="background: #5865F2; color: white; border-color: #5865F2; width: 100%;">Generate Link Code</button>
+                    <p id="discord-link-code-display" style="display: none; text-align: center; font-size: 1.1rem; font-family: monospace; background: rgba(12,6,8,0.6); padding: 14px; border-radius: 8px; color: #4ade80; border: 1px dashed #5865F2; margin-top: 10px;"></p>
                 </div>
+                
+                <div id="discord-linked" class="linked-card" style="display: none;">
+                    <img id="discord-avatar" src="" style="border: 2px solid #5865F2;">
+                    <div style="flex: 1;">
+                        <div class="linked-label">Linked Account</div>
+                        <div id="discord-username" class="linked-name"></div>
+                    </div>
+                    <button class="btn-danger" style="width: auto; padding: 6px 12px; font-size: 0.8rem;" onclick="unlinkDiscord()">Unlink</button>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-header" style="color: #4ade80;">
+                    <img src="https://cdn-icons-png.flaticon.com/512/806/806008.png" style="filter: invert(1);"> 
+                    <h3>Meta Quest VR</h3>
+                </div>
+                
+                <div id="vr-unlinked">
+                    <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 12px;">Enter your 6-digit code from Crimson Protocol to link your VR inventory.</p>
+                    <form onsubmit="window.submitVRLinkCode(event)" style="display: flex; gap: 10px;">
+                        <input type="text" id="vr-link-input" placeholder="000000" maxlength="6" style="flex: 1; font-family: monospace; font-size: 1.15rem; text-align: center; letter-spacing: 4px;">
+                        <button type="submit" class="btn-primary" style="width: auto; margin-top: 0; background: #4ade80; color: #000; font-weight: 700; padding: 10px 18px;">Link</button>
+                    </form>
+                </div>
+
+                <div id="vr-linked" class="linked-card" style="display: none;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #4ade80; display: flex; align-items: center; justify-content: center;">
+                        <img src="https://cdn-icons-png.flaticon.com/512/806/806008.png" style="width: 20px; filter: invert(1);">
+                    </div>
+                    <div>
+                        <div class="linked-label">PlayFab Linked</div>
+                        <div id="vr-playfab-id" class="linked-name" style="font-family: monospace;"></div>
+                    </div>
+                </div>
+            <hr class="divider">
+
+            <div class="section-header" style="color: var(--crimson-light);">
+                <img src="https://cdn-icons-png.flaticon.com/512/3064/3064155.png" style="filter: invert(1); width: 20px;"> 
+                <h3>Developer Portal</h3>
             </div>
+            <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 14px; line-height: 1.5;">
+                Create and manage SSO Link keys for your external applications & games.
+            </p>
+            <a href="developer.html" class="btn-primary" style="display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; padding: 12px; font-weight: 700; background: var(--crimson);">
+                🛠️ Open Developer Dashboard →
+            </a>
         </div>
     </main>
 

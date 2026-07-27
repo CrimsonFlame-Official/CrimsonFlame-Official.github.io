@@ -286,35 +286,37 @@
             </p>
 
             <!-- Permissions Box -->
-            <div class="permissions-box">
-                <div class="permissions-title">This app will be able to</div>
-                <div class="permission-item">
-                    <span class="perm-icon">✓</span>
-                    <span>Access your display name & profile picture</span>
+            <div id="sso-permissions-container">
+                <div class="permissions-box">
+                    <div class="permissions-title">This app will be able to</div>
+                    <div class="permission-item">
+                        <span class="perm-icon">✓</span>
+                        <span>Access your display name & profile picture</span>
+                    </div>
+                    <div class="permission-item">
+                        <span class="perm-icon">✓</span>
+                        <span>View your email address</span>
+                    </div>
+                    <div class="permission-item">
+                        <span class="perm-icon">✓</span>
+                        <span>Authenticate via CrimsonFlame SSO</span>
+                    </div>
                 </div>
-                <div class="permission-item">
-                    <span class="perm-icon">✓</span>
-                    <span>View your email address</span>
-                </div>
-                <div class="permission-item">
-                    <span class="perm-icon">✓</span>
-                    <span>Authenticate via CrimsonFlame SSO</span>
-                </div>
-            </div>
 
-            <div class="permissions-box" style="border-color: rgba(239, 68, 68, 0.2);">
-                <div class="permissions-title" style="color: #f87171;">This app will NOT be able to</div>
-                <div class="permission-item">
-                    <span style="color: #f87171; font-size: 1rem;">✕</span>
-                    <span>Change your password or account settings</span>
-                </div>
-                <div class="permission-item">
-                    <span style="color: #f87171; font-size: 1rem;">✕</span>
-                    <span>Post or act on your behalf</span>
-                </div>
-                <div class="permission-item">
-                    <span style="color: #f87171; font-size: 1rem;">✕</span>
-                    <span>Access private messages or payment info</span>
+                <div class="permissions-box" style="border-color: rgba(239, 68, 68, 0.2);">
+                    <div class="permissions-title" style="color: #f87171;">This app will NOT be able to</div>
+                    <div class="permission-item">
+                        <span style="color: #f87171; font-size: 1rem;">✕</span>
+                        <span>Change your password or account settings</span>
+                    </div>
+                    <div class="permission-item">
+                        <span style="color: #f87171; font-size: 1rem;">✕</span>
+                        <span>Post or act on your behalf</span>
+                    </div>
+                    <div class="permission-item">
+                        <span style="color: #f87171; font-size: 1rem;">✕</span>
+                        <span>Access private messages or payment info</span>
+                    </div>
                 </div>
             </div>
 
@@ -354,6 +356,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBSSJKDrFJ1_qlliZqgw34CY2TSaKOxxxM",
@@ -366,22 +369,89 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app);
         const googleProvider = new GoogleAuthProvider();
 
         var urlParams = new URLSearchParams(window.location.search);
+        var linkKey = urlParams.get('linkkey') || urlParams.get('key');
         var serviceName = urlParams.get('service') || null;
-        var redirectUrl = urlParams.get('redirect') || null;
+        var redirectUrl = urlParams.get('redirect') || urlParams.get('redirect_uri') || null;
 
-        if (serviceName) {
-            document.getElementById('service-name-text').textContent = serviceName;
-            document.getElementById('link-header-title').textContent = 'Link with ' + serviceName + '?';
+        function applySSOAppDetails(data) {
+            if (data.appName) {
+                document.getElementById('service-name-text').textContent = data.appName;
+                document.getElementById('link-header-title').textContent = 'Link with ' + data.appName + '?';
+            }
+            if (data.appLogo) {
+                var logoEl = document.getElementById('service-logo');
+                if (logoEl) logoEl.src = data.appLogo;
+            }
+            if (!redirectUrl && data.redirectUrl) {
+                redirectUrl = data.redirectUrl;
+            }
+            if (data.permissions && data.permissions.length > 0) {
+                var permContainer = document.getElementById('sso-permissions-container');
+                if (permContainer) {
+                    var itemsHtml = data.permissions.map(p => `
+                        <div class="permission-item">
+                            <span class="perm-icon">✓</span>
+                            <span>${p}</span>
+                        </div>
+                    `).join('');
+                    permContainer.innerHTML = `
+                        <div class="permissions-box">
+                            <div class="permissions-title">This app will be able to</div>
+                            ${itemsHtml}
+                        </div>
+                        <div class="permissions-box" style="border-color: rgba(239, 68, 68, 0.2);">
+                            <div class="permissions-title" style="color: #f87171;">This app will NOT be able to</div>
+                            <div class="permission-item">
+                                <span style="color: #f87171; font-size: 1rem;">✕</span>
+                                <span>Change your password or account settings</span>
+                            </div>
+                            <div class="permission-item">
+                                <span style="color: #f87171; font-size: 1rem;">✕</span>
+                                <span>Post or act on your behalf</span>
+                            </div>
+                            <div class="permission-item">
+                                <span style="color: #f87171; font-size: 1rem;">✕</span>
+                                <span>Access private messages or payment info</span>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
         }
 
-        // Set app logo if provided via ?logo= param
-        var appLogo = urlParams.get('logo');
-        if (appLogo) {
-            var logoEl = document.getElementById('service-logo');
-            if (logoEl) logoEl.src = decodeURIComponent(appLogo);
+        // Check if linkkey parameter was provided
+        if (linkKey) {
+            // First check local storage cache
+            try {
+                var localSaved = localStorage.getItem('cf_sso_key_' + linkKey);
+                if (localSaved) {
+                    applySSOAppDetails(JSON.parse(localSaved));
+                }
+            } catch(e) {}
+
+            // Query Firestore for linkkey document
+            getDoc(doc(db, "sso_links", linkKey)).then(docSnap => {
+                if (docSnap.exists()) {
+                    applySSOAppDetails(docSnap.data());
+                }
+            }).catch(err => {
+                console.warn("Could not fetch SSO linkkey from Firestore:", err);
+            });
+        } else {
+            // Fallback for direct params ?service= and ?logo=
+            if (serviceName) {
+                document.getElementById('service-name-text').textContent = serviceName;
+                document.getElementById('link-header-title').textContent = 'Link with ' + serviceName + '?';
+            }
+            var appLogo = urlParams.get('logo');
+            if (appLogo) {
+                var logoEl = document.getElementById('service-logo');
+                if (logoEl) logoEl.src = decodeURIComponent(appLogo);
+            }
         }
 
         var currentUser = null;

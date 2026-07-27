@@ -161,7 +161,7 @@ window.handleUpload = async function(file, type) {
         sEl.innerText = "Success!";
     } catch (err) { sEl.innerText = "Error uploading."; }
     setTimeout(() => { sEl.style.display = 'none'; }, 3000);
-}
+};
 
 let userDocUnsub = null;
 
