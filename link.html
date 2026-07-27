@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-dark: #0a0a0c;
@@ -60,7 +60,6 @@
 
         .nav-links a:hover { color: #fff; }
 
-        /* Linking Container */
         .link-viewport {
             flex: 1;
             display: flex;
@@ -166,7 +165,6 @@
 
         .perm-icon { color: var(--accent-green); font-size: 1rem; }
 
-        /* Action Buttons */
         .action-buttons {
             display: flex;
             gap: 14px;
@@ -186,9 +184,13 @@
             transition: all 0.2s ease;
         }
 
-        .btn-authorize:hover {
+        .btn-authorize:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 6px 24px rgba(217, 4, 41, 0.6);
+        }
+
+        .btn-authorize:disabled {
+            cursor: not-allowed;
         }
 
         .btn-cancel {
@@ -206,6 +208,38 @@
         .btn-cancel:hover {
             background: rgba(255, 255, 255, 0.12);
             color: #fff;
+        }
+
+        .btn-google {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: background 0.2s;
+        }
+
+        .btn-google:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .profile-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(46,204,113,0.1);
+            border: 1px solid rgba(46,204,113,0.3);
+            padding: 10px 14px;
+            border-radius: 12px;
+            text-align: left;
         }
 
         .success-banner {
@@ -241,9 +275,9 @@
             </div>
 
             <!-- Dynamic Heading -->
-            <h1 id="link-header-title" class="link-title">Link with HorizonNOVA?</h1>
+            <h1 id="link-header-title" class="link-title">Link Account</h1>
             <p id="link-header-subtitle" class="link-subtitle">
-                Authorizing will connect your <strong>CrimsonFlame-Official</strong> account to <strong><span id="service-name-text">HorizonNOVA</span></strong>.
+                Authorizing will connect your <strong>CrimsonFlame-Official</strong> account to <strong><span id="service-name-text">this service</span></strong>.
             </p>
 
             <!-- Permissions Box -->
@@ -263,11 +297,30 @@
                 </div>
             </div>
 
+            <!-- Sign-in prompt (shown when not logged in) -->
+            <div id="auth-needed" style="margin-bottom: 16px;">
+                <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 12px;">Sign in to your CrimsonFlame account first:</p>
+                <button onclick="window.signInWithGoogle()" class="btn-google">
+                    <img src="https://cdn-icons-png.flaticon.com/512/300/300221.png" style="width: 18px; height: 18px;"> Sign in with Google
+                </button>
+            </div>
+
+            <!-- Signed-in profile (shown when logged in) -->
+            <div id="user-profile-bar" style="display: none; margin-bottom: 16px;">
+                <div class="profile-bar">
+                    <img id="link-user-pfp" src="" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+                    <div>
+                        <div id="link-user-name" style="font-weight: 700; font-size: 0.9rem; color: #4ade80;"></div>
+                        <div id="link-user-email" style="font-size: 0.78rem; color: var(--text-muted);"></div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Action Buttons -->
             <div class="action-buttons">
                 <button onclick="window.cancelLinking()" class="btn-cancel">Cancel</button>
-                <button onclick="window.authorizeLinking()" class="btn-authorize">
-                    Authorize & Link
+                <button id="authorize-btn" onclick="window.authorizeLinking()" class="btn-authorize" disabled style="opacity: 0.5;">
+                    Sign in first
                 </button>
             </div>
 
@@ -279,7 +332,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBSSJKDrFJ1_qlliZqgw34CY2TSaKOxxxM",
@@ -292,32 +345,68 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const googleProvider = new GoogleAuthProvider();
 
         var urlParams = new URLSearchParams(window.location.search);
-        var serviceName = urlParams.get('service') || 'HorizonNOVA';
-        var redirectUrl = urlParams.get('redirect') || 'http://localhost:8080';
+        var serviceName = urlParams.get('service') || null;
+        var redirectUrl = urlParams.get('redirect') || null;
 
-        document.getElementById('service-name-text').textContent = serviceName;
-        document.getElementById('link-header-title').textContent = 'Link with ' + serviceName + '?';
+        if (serviceName) {
+            document.getElementById('service-name-text').textContent = serviceName;
+            document.getElementById('link-header-title').textContent = 'Link with ' + serviceName + '?';
+        }
 
         var currentUser = null;
         var DEFAULT_PFP = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
+        // Google sign-in directly on this page
+        window.signInWithGoogle = async function() {
+            try {
+                await signInWithPopup(auth, googleProvider);
+            } catch (err) {
+                alert("Sign-in error: " + err.message);
+            }
+        };
+
         // Listen for CF Firebase auth state
         onAuthStateChanged(auth, function(user) {
+            var authNeeded = document.getElementById('auth-needed');
+            var profileBar = document.getElementById('user-profile-bar');
+            var btn = document.getElementById('authorize-btn');
+
             if (user) {
                 currentUser = user;
-                // Show user info on the page
-                var btn = document.querySelector('.btn-authorize');
-                if (btn) btn.textContent = 'Authorize as ' + (user.displayName || user.email.split('@')[0]);
+                var name = user.displayName || user.email.split('@')[0];
+
+                // Hide sign-in, show profile
+                if (authNeeded) authNeeded.style.display = 'none';
+                if (profileBar) {
+                    profileBar.style.display = 'block';
+                    document.getElementById('link-user-pfp').src = user.photoURL || DEFAULT_PFP;
+                    document.getElementById('link-user-name').textContent = '✓ ' + name;
+                    document.getElementById('link-user-email').textContent = user.email;
+                }
+
+                // Enable authorize button
+                if (btn) {
+                    btn.textContent = 'Authorize as ' + name;
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                }
+            } else {
+                // Show sign-in prompt
+                if (authNeeded) authNeeded.style.display = 'block';
+                if (profileBar) profileBar.style.display = 'none';
+                if (btn) {
+                    btn.textContent = 'Sign in first';
+                    btn.disabled = true;
+                    btn.style.opacity = '0.5';
+                }
             }
         });
 
         window.authorizeLinking = function() {
-            if (!currentUser) {
-                alert("You need to sign in to CrimsonFlame first! Go to the Dashboard to log in, then come back.");
-                return;
-            }
+            if (!currentUser) return;
 
             var userData = {
                 uid: currentUser.uid,
@@ -329,13 +418,29 @@
             var successBanner = document.getElementById('success-message');
             if (successBanner) successBanner.style.display = 'block';
 
+            var btn = document.getElementById('authorize-btn');
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = '✓ Linked!';
+                btn.style.opacity = '0.5';
+            }
+
             setTimeout(function() {
-                window.location.href = redirectUrl + '?cf_auth=success&user_data=' + encodeURIComponent(JSON.stringify(userData));
+                if (redirectUrl) {
+                    window.location.href = redirectUrl + '?cf_auth=success&user_data=' + encodeURIComponent(JSON.stringify(userData));
+                } else {
+                    // No redirect — just show success
+                    alert('Account linked successfully!');
+                }
             }, 1200);
         };
 
         window.cancelLinking = function() {
-            window.location.href = redirectUrl + '?cf_auth=canceled';
+            if (redirectUrl) {
+                window.location.href = redirectUrl + '?cf_auth=canceled';
+            } else {
+                window.location.href = 'index.html';
+            }
         };
     </script>
 </body>
