@@ -277,7 +277,22 @@
         </div>
     </main>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBSSJKDrFJ1_qlliZqgw34CY2TSaKOxxxM",
+            authDomain: "crimsonflame-8169e.firebaseapp.com",
+            projectId: "crimsonflame-8169e",
+            storageBucket: "crimsonflame-8169e.firebasestorage.app",
+            messagingSenderId: "406321213530",
+            appId: "1:406321213530:web:92d27a69d34d147393a863"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
         var urlParams = new URLSearchParams(window.location.search);
         var serviceName = urlParams.get('service') || 'HorizonNOVA';
         var redirectUrl = urlParams.get('redirect') || 'http://localhost:8080';
@@ -285,38 +300,43 @@
         document.getElementById('service-name-text').textContent = serviceName;
         document.getElementById('link-header-title').textContent = 'Link with ' + serviceName + '?';
 
-        function authorizeLinking() {
-            var token = 'cf_official_token_' + Math.random().toString(36).substring(2, 10);
-            var successBanner = document.getElementById('success-message');
-            
-            if (successBanner) {
-                successBanner.style.display = 'block';
+        var currentUser = null;
+        var DEFAULT_PFP = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
+        // Listen for CF Firebase auth state
+        onAuthStateChanged(auth, function(user) {
+            if (user) {
+                currentUser = user;
+                // Show user info on the page
+                var btn = document.querySelector('.btn-authorize');
+                if (btn) btn.textContent = 'Authorize as ' + (user.displayName || user.email.split('@')[0]);
+            }
+        });
+
+        window.authorizeLinking = function() {
+            if (!currentUser) {
+                alert("You need to sign in to CrimsonFlame first! Go to the Dashboard to log in, then come back.");
+                return;
             }
 
-            localStorage.setItem('crimsonflame_official_linked_' + serviceName.toLowerCase(), JSON.stringify({
-                linked: true,
-                token: token,
-                domain: 'CrimsonFlame-Official.github.io',
-                service: serviceName,
-                timestamp: new Date().toISOString()
-            }));
+            var userData = {
+                uid: currentUser.uid,
+                name: currentUser.displayName || currentUser.email.split('@')[0],
+                email: currentUser.email,
+                pfp: currentUser.photoURL || DEFAULT_PFP
+            };
+
+            var successBanner = document.getElementById('success-message');
+            if (successBanner) successBanner.style.display = 'block';
 
             setTimeout(function() {
-                if (redirectUrl) {
-                    window.location.href = redirectUrl + '?linked=true&token=' + token + '&domain=CrimsonFlame-Official.github.io';
-                } else {
-                    alert('Successfully linked with ' + serviceName + ' via CrimsonFlame-Official!');
-                }
+                window.location.href = redirectUrl + '?cf_auth=success&user_data=' + encodeURIComponent(JSON.stringify(userData));
             }, 1200);
-        }
+        };
 
-        function cancelLinking() {
-            if (redirectUrl) {
-                window.location.href = redirectUrl;
-            } else {
-                window.location.href = 'index.html';
-            }
-        }
+        window.cancelLinking = function() {
+            window.location.href = redirectUrl + '?cf_auth=canceled';
+        };
     </script>
 </body>
 </html>
