@@ -267,6 +267,16 @@
 
     <main class="link-viewport">
         <div class="link-card">
+            <!-- App Avatars -->
+            <div class="link-avatars">
+                <div class="avatar-box avatar-crimson">
+                    <img src="https://i.ibb.co/TBkJR2Jn/unnamed-removebg-preview.png" alt="CF" style="width: 40px; height: 40px; object-fit: contain; border-radius: 8px;">
+                </div>
+                <div class="link-connection-arrow">⟷</div>
+                <div id="service-avatar" class="avatar-box avatar-target">
+                    <img id="service-logo" src="https://i.ibb.co/TBkJR2Jn/unnamed-removebg-preview.png" alt="App" style="width: 40px; height: 40px; object-fit: contain; border-radius: 8px;">
+                </div>
+            </div>
 
 
             <!-- Dynamic Heading -->
@@ -365,6 +375,13 @@
         if (serviceName) {
             document.getElementById('service-name-text').textContent = serviceName;
             document.getElementById('link-header-title').textContent = 'Link with ' + serviceName + '?';
+        }
+
+        // Set app logo if provided via ?logo= param
+        var appLogo = urlParams.get('logo');
+        if (appLogo) {
+            var logoEl = document.getElementById('service-logo');
+            if (logoEl) logoEl.src = decodeURIComponent(appLogo);
         }
 
         var currentUser = null;
