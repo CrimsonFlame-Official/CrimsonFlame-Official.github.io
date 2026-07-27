@@ -3,104 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CrimsonFlame Hub</title>
+    <title>CrimsonFlame — High-Performance Intelligence & HPC</title>
+    <link rel="stylesheet" href="style.css?v=2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-dark: #0a0a0c;
-            --surface: #16161a;
-            --brand-red: #d90429;
-            --flame: #ff6b35;
-            --text-light: #fbfbfc;
-            --text-muted: #94a3b8;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-dark);
-            color: var(--text-light);
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Header Navigation */
-        .top-nav {
-            height: 64px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 40px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            background: rgba(10, 10, 12, 0.8);
-            backdrop-filter: blur(10px);
-        }
-
-        .top-nav h2 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.25rem;
-            color: var(--brand-red);
-            margin: 0;
-        }
-
-        .nav-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            margin-left: 24px;
-            font-size: 0.9rem;
-            transition: color 0.2s ease;
-        }
-
-        .nav-links a:hover { color: #fff; }
-
-        /* Main Workspace Container */
-        .main-container {
-            flex: 1;
-            padding: 60px 40px;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-            max-width: 1000px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .hero-title {
-            font-family: 'Outfit', sans-serif;
-            font-size: 2.6rem;
-            color: var(--text-light);
-            margin: 0;
-        }
-
-        .hero-title span { color: var(--brand-red); }
-
-        .hero-subtitle {
-            font-size: 1rem;
-            color: var(--text-muted);
-            margin-top: -12px;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- Top Navigation Header -->
-    <div class="top-nav">
-        <h2>CrimsonFlame</h2>
-        <div class="nav-links">
-            <a href="dashboard.html">Dashboard</a>
-        </div>
-    </div>
+    <!-- Header Navigation -->
+    <header class="top-nav">
+        <a href="index.html" class="nav-brand">
+            <span class="brand-icon">🔥</span>
+            <span class="brand-name">CrimsonFlame</span>
+        </a>
+        <nav class="nav-links">
+            <a href="dashboard.html" class="btn-nav-primary">Dashboard Login</a>
+        </nav>
+    </header>
 
-    <!-- Main Dashboard Area -->
-    <div class="main-container">
-        <h1 class="hero-title">Welcome to <span>CrimsonFlame</span></h1>
-        <p class="hero-subtitle">Official Portal for CrimsonFlame HPC Networks & Systems</p>
-    </div>
+    <!-- Hero Workspace -->
+    <main class="hero-wrapper">
+        <div class="hero-badge">
+            <span>⚡ Horizon Labs • High-Performance Compute</span>
+        </div>
+
+        <h1 class="hero-headline">
+            Powering the Next Era of <span class="headline-gradient">Intelligence & Neural Computing.</span>
+        </h1>
+
+        <p class="hero-subtitle">
+            CrimsonFlame oversees corporate strategy, HPC GPU clusters, parallel vector simulation engines, and custom Transformer research under Horizon Labs.
+        </p>
+
+        <!-- Feature Grid Cards -->
+        <div class="features-grid">
+            <div class="card-feature">
+                <div class="card-icon">⚡</div>
+                <h3 class="card-title">HorizonNOVA Engine</h3>
+                <p class="card-desc">
+                    Custom 5.0M parameter Transformer architecture running live PyTorch multi-turn conversational intelligence.
+                </p>
+            </div>
+
+            <div class="card-feature">
+                <div class="card-icon">🖥️</div>
+                <h3 class="card-title">HPC Compute Clusters</h3>
+                <p class="card-desc">
+                    Dedicated parallel GPU cluster simulations, LED-matrix framebuffers, and low-latency network infrastructure.
+                </p>
+            </div>
+
+            <div class="card-feature">
+                <div class="card-icon">🎮</div>
+                <h3 class="card-title">VR & Locomotion R&D</h3>
+                <p class="card-desc">
+                    Experimental Unity VR locomotion systems, spatial vector math, and Crimson Protocol hardware integrations.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <p>© 2026 <strong>CrimsonFlame</strong>. All rights reserved. | Powered by Horizon Labs</p>
+    </footer>
 
 </body>
 </html>
