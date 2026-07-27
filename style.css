@@ -113,6 +113,13 @@ body {
 
 .pill-brand-icon { font-size: 1rem; }
 
+.pill-brand-logo {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
 .pill-link {
     color: var(--text-secondary);
     text-decoration: none;
