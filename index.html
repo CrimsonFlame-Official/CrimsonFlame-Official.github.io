@@ -145,7 +145,42 @@
             b.style.transform = 'translate(' + (x * factor) + 'px, ' + (y * factor) + 'px)';
         });
     });
+
     </script>
+
+    <!-- OAuth SSO Page (hidden unless ?app_name= is in URL) -->
+    <div id="page-oauth" class="page-content" style="display: none; position: fixed; inset: 0; z-index: 9999; background: var(--bg); display: none; justify-content: center; align-items: center;">
+        <div style="max-width: 420px; width: 90%; background: rgba(22, 12, 16, 0.95); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 36px; text-align: center;">
+            <img src="https://i.ibb.co/TBkJR2Jn/unnamed-removebg-preview.png" style="width: 56px; height: 56px; margin-bottom: 14px; border-radius: 10px;">
+            <h2 id="oauth-title" style="font-family: var(--font-heading); font-size: 1.4rem; margin-bottom: 6px;">Connect to App</h2>
+            <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 24px;">This app is requesting access to your CrimsonFlame account.</p>
+
+            <!-- Not logged in prompt -->
+            <div id="oauth-login-prompt" style="margin-bottom: 20px;">
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 14px;">Please sign in first to link your account.</p>
+                <a href="dashboard.html" style="display: inline-block; padding: 10px 28px; background: var(--crimson); color: #fff; border-radius: 10px; text-decoration: none; font-weight: 600;">Sign In on Dashboard</a>
+            </div>
+
+            <!-- Logged in user info -->
+            <div id="oauth-user-info" style="display: none; margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); text-align: left; margin-bottom: 16px;">
+                    <img id="oauth-pfp" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover;">
+                    <div>
+                        <div id="oauth-name" style="font-weight: 700; color: #fff; font-size: 1rem;"></div>
+                        <div id="oauth-email" style="font-size: 0.82rem; color: var(--text-secondary);"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Approve / Cancel buttons -->
+            <div id="oauth-actions" style="display: none; gap: 10px; justify-content: center;">
+                <button onclick="cancelOAuth()" style="padding: 10px 24px; background: rgba(255,255,255,0.08); color: var(--text-secondary); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; cursor: pointer; font-weight: 600;">Cancel</button>
+                <button onclick="approveOAuth()" style="padding: 10px 24px; background: var(--crimson); color: #fff; border: none; border-radius: 10px; cursor: pointer; font-weight: 700;">✓ Approve & Link</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
 
 </body>
 </html>

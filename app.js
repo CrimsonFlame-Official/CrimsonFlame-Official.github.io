@@ -58,9 +58,10 @@ const oauthRedirectUri = urlParams.get('redirect_uri');
 if (isIndex && oauthAppName && oauthRedirectUri) {
     setTimeout(() => {
         document.querySelectorAll('.page-content').forEach(p => p.style.display = 'none');
-        document.getElementById('page-oauth').style.display = 'block';
+        document.getElementById('page-oauth').style.display = 'flex';
         document.getElementById('oauth-title').innerText = `Connect to ${oauthAppName}`;
-        document.querySelector('nav').style.display = 'none';
+        var nav = document.querySelector('.pill-nav');
+        if (nav) nav.style.display = 'none';
     }, 150);
 }
 
