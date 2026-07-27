@@ -4,23 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | CrimsonFlame</title>
-    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="stylesheet" href="style.css?v=6">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <header class="top-nav">
-        <a href="index.html" class="nav-brand">
-            <span class="brand-icon">🔥</span>
-            <span class="brand-name">CrimsonFlame</span>
+    <div class="bg-glow"></div>
+    <div class="bg-glow-2"></div>
+    <div class="particles" id="particles"></div>
+
+    <nav class="pill-nav">
+        <a href="index.html" class="pill-brand">
+            <span class="pill-brand-icon">🔥</span>
+            CrimsonFlame
         </a>
-        <nav class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="support.html">Support</a>
-        </nav>
-    </header>
+        <a href="index.html" class="pill-link">Home</a>
+        <a href="support.html" class="pill-link">Support</a>
+    </nav>
 
     <main class="dash-main">
         <!-- Login View -->
@@ -38,11 +40,11 @@
                 <img src="https://cdn-icons-png.flaticon.com/512/300/300221.png" alt="G"> Continue with Google
             </button>
             <p style="text-align:center; margin-top: 14px; font-size: 0.88rem; color: var(--text-secondary);">
-                Don't have an account? <a onclick="toggleLoginMode()" style="cursor: pointer; color: var(--crimson); font-weight: 600;">Register</a>
+                Don't have an account? <a onclick="toggleLoginMode()" style="cursor: pointer; color: var(--crimson-light); font-weight: 600;">Register</a>
             </p>
         </div>
 
-        <!-- Dashboard View (hidden until logged in) -->
+        <!-- Dashboard View -->
         <div id="dashboard-container" class="dash-card" style="display: none;">
             <h2>Dashboard</h2>
             
@@ -68,14 +70,13 @@
                 <input type="text" id="display-name" placeholder="Seen by other players">
 
                 <label>Username</label>
-                <input type="text" id="username-input" placeholder="username" style="font-family: 'Fira Code', monospace;">
+                <input type="text" id="username-input" placeholder="username" style="font-family: monospace;">
 
                 <button type="submit" class="btn-primary">Save Changes</button>
             </form>
 
             <hr class="divider">
 
-            <!-- Discord Integration -->
             <div class="section-header" style="color: #5865F2;">
                 <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png"> 
                 <h3>Discord</h3>
@@ -84,7 +85,7 @@
             <div id="discord-unlinked" style="display: none;">
                 <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 12px;">Link your Discord account via the bot to sync your data.</p>
                 <button class="btn-secondary" onclick="generateDiscordLinkCode()" style="background: #5865F2; color: white; border-color: #5865F2; width: 100%;">Generate Link Code</button>
-                <p id="discord-link-code-display" style="display: none; text-align: center; font-size: 1.1rem; font-family: monospace; background: var(--bg-input); padding: 14px; border-radius: 8px; color: #4ade80; border: 1px dashed #5865F2; margin-top: 10px;"></p>
+                <p id="discord-link-code-display" style="display: none; text-align: center; font-size: 1.1rem; font-family: monospace; background: rgba(12,6,8,0.6); padding: 14px; border-radius: 8px; color: #4ade80; border: 1px dashed #5865F2; margin-top: 10px;"></p>
             </div>
             
             <div id="discord-linked" class="linked-card" style="display: none;">
@@ -98,7 +99,6 @@
 
             <hr class="divider">
 
-            <!-- Meta Quest VR Link -->
             <div class="section-header" style="color: #4ade80;">
                 <img src="https://cdn-icons-png.flaticon.com/512/806/806008.png" style="filter: invert(1);"> 
                 <h3>Meta Quest VR</h3>
@@ -144,6 +144,26 @@
             </a>
         </p>
     </footer>
+
+    <script>
+    // Floating particles
+    (function() {
+        const c = document.getElementById('particles');
+        for (let i = 0; i < 25; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const s = Math.random() * 3 + 1;
+            p.style.width = s + 'px';
+            p.style.height = s + 'px';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.top = Math.random() * 100 + '%';
+            p.style.animationDuration = (Math.random() * 12 + 8) + 's';
+            p.style.animationDelay = (Math.random() * 8) + 's';
+            p.style.opacity = Math.random() * 0.4 + 0.1;
+            c.appendChild(p);
+        }
+    })();
+    </script>
 
     <script type="module" src="dashboard.js"></script>
 </body>
