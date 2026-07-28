@@ -241,7 +241,13 @@ onAuthStateChanged(auth, user => {
             if(docSnap.exists()) {
                 const data = docSnap.data();
                 document.getElementById('username-input').value = data.username || "";
+                if (data.displayName) document.getElementById('display-name').value = data.displayName;
                 
+                const sidebarNameEl = document.getElementById('user-sidebar-name');
+                if (sidebarNameEl) {
+                    sidebarNameEl.innerText = data.displayName || data.username || currentUser.displayName || currentUser.email.split('@')[0];
+                }
+
                 if(data.discordId) {
                     document.getElementById('discord-unlinked').style.display = 'none';
                     document.getElementById('discord-linked').style.display = 'flex';
