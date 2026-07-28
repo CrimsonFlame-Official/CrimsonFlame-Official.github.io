@@ -59,9 +59,9 @@
                 User Settings
             </h1>
 
-            <div class="dashboard-grid-layout" style="display: grid; grid-template-columns: 310px 1fr; gap: 24px; text-align: left; align-items: start; margin-bottom: 32px;">
+            <div class="dashboard-grid-layout" style="display: grid; grid-template-columns: 320px 1fr; gap: 24px; text-align: left; align-items: start; margin-bottom: 32px;">
                 
-                <!-- Left Column: Profile Card + Discord Block Underneath -->
+                <!-- Left Column: Profile Card + Discord Block + Connected Apps Block Underneath -->
                 <div style="display: flex; flex-direction: column; gap: 24px;">
                     
                     <!-- Left Block 1: Profile Badge Card -->
@@ -75,7 +75,7 @@
                         <button class="btn-danger" onclick="logOutUser()" style="width: 100%;">Sign Out</button>
                     </div>
 
-                    <!-- Left Block 2: Discord Integration (Under Profile) -->
+                    <!-- Left Block 2: Discord Integration -->
                     <div class="dash-card" style="margin-bottom: 0;">
                         <div class="section-header" style="color: #5865F2; margin-bottom: 12px;">
                             <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" style="width: 20px;"> 
@@ -98,9 +98,26 @@
                         </div>
                     </div>
 
+                    <!-- Left Block 3: Connected Apps & Services (Under Discord) -->
+                    <div class="dash-card" style="margin-bottom: 0;">
+                        <div class="section-header" style="color: #60a5fa; margin-bottom: 12px;">
+                            <img src="https://cdn-icons-png.flaticon.com/512/1006/1006771.png" style="filter: invert(1); width: 20px;"> 
+                            <h3 style="margin: 0; font-family: 'Outfit', sans-serif;">Connected Apps & Services</h3>
+                        </div>
+                        <p style="color: var(--text-secondary); font-size: 0.86rem; margin-bottom: 16px; line-height: 1.5;">
+                            External applications authorized via CrimsonFlame Single Sign-On.
+                        </p>
+
+                        <div id="connected-apps-list" style="display: flex; flex-direction: column; gap: 10px;">
+                            <p id="connected-apps-empty" style="color: var(--text-secondary); font-size: 0.85rem; text-align: center; padding: 16px; background: rgba(0,0,0,0.3); border-radius: 10px; border: 1px dashed rgba(255,255,255,0.1);">
+                                No connected applications yet.
+                            </p>
+                        </div>
+                    </div>
+
                 </div>
 
-                <!-- Right Column: Profile Settings, Meta Quest, Connected Apps -->
+                <!-- Right Column: Profile Settings & Meta Quest VR -->
                 <div style="display: flex; flex-direction: column; gap: 24px;">
                     
                     <!-- Right Block 1: Profile Settings -->
@@ -148,23 +165,6 @@
                                 <div class="linked-label">PlayFab Linked</div>
                                 <div id="vr-playfab-id" class="linked-name" style="font-family: monospace;"></div>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Right Block 3: Connected Apps & Services -->
-                    <div class="dash-card" style="margin-bottom: 0;">
-                        <div class="section-header" style="color: #60a5fa; margin-bottom: 12px;">
-                            <img src="https://cdn-icons-png.flaticon.com/512/1006/1006771.png" style="filter: invert(1); width: 20px;"> 
-                            <h3 style="margin: 0; font-family: 'Outfit', sans-serif;">Connected Apps & Services</h3>
-                        </div>
-                        <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 16px; line-height: 1.5;">
-                            External applications authorized via CrimsonFlame Single Sign-On.
-                        </p>
-
-                        <div id="connected-apps-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px;">
-                            <p id="connected-apps-empty" style="color: var(--text-secondary); font-size: 0.85rem; text-align: center; padding: 16px; background: rgba(0,0,0,0.3); border-radius: 10px; border: 1px dashed rgba(255,255,255,0.1); grid-column: 1 / -1;">
-                                No connected applications yet.
-                            </p>
                         </div>
                     </div>
 
