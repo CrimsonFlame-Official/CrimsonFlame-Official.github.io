@@ -194,12 +194,16 @@
         <div class="loader-title">CrimsonFlame</div>
     </div>
     <script>
-        window.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
-                var l = document.getElementById('page-loader');
-                if (l) l.classList.add('fade-out');
-            }, 300);
-        });
+        function hidePageLoader() {
+            var l = document.getElementById('page-loader');
+            if (l) {
+                l.classList.add('fade-out');
+                setTimeout(function() { l.style.display = 'none'; }, 400);
+            }
+        }
+        window.addEventListener('DOMContentLoaded', hidePageLoader);
+        window.addEventListener('load', hidePageLoader);
+        setTimeout(hidePageLoader, 1500);
     </script>
 
     <!-- Ambient Background -->
