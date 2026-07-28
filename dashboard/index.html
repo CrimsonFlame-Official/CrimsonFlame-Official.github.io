@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | CrimsonFlame</title>
+    <link rel="stylesheet" href="../style.css?v=6">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+    <div class="bg-glow-2"></div>
+    <div class="particles" id="particles"></div>
+
+    <nav class="pill-nav">
+        <a href="../index.html" class="pill-brand">
+            <img src="https://i.ibb.co/TBkJR2Jn/unnamed-removebg-preview.png" alt="CF" class="pill-brand-logo">
+            CrimsonFlame
+        </a>
+        <a href="../index.html" class="pill-link">Home</a>
+        <a href="../projects" class="pill-link">Projects</a>
+        <a href="../developer" class="pill-link">Developer</a>
+        <a href="../support" class="pill-link">Support</a>
+    </nav>
+
+    <main class="dash-main">
+        <!-- Login View -->
+        <div id="login-container" class="dash-card">
+            <h2>Account Login</h2>
+            <form onsubmit="submitLogin(event)">
+                <label>Email</label>
+                <input type="email" id="email" placeholder="you@example.com" required>
+                <label>Password</label>
+                <input type="password" id="password" placeholder="••••••••" required>
+                <button type="submit" class="btn-primary">Sign In</button>
+            </form>
+            <hr class="divider">
+            <button type="button" class="btn-google-sign-in" onclick="loginWithGoogle(event)">
+                <img src="https://cdn-icons-png.flaticon.com/512/300/300221.png" alt="G"> Continue with Google
+            </button>
+            <p style="text-align:center; margin-top: 14px; font-size: 0.88rem; color: var(--text-secondary);">
+                Don't have an account? <a id="toggle-auth" onclick="toggleLoginMode()" style="cursor: pointer; color: var(--crimson-light); font-weight: 600;">Register</a>
+            </p>
+        </div>
+
+        <!-- Dashboard View -->
+        <div id="dashboard-container" class="dash-card" style="display: none; max-width: 540px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                <h2 style="margin: 0;">Dashboard</h2>
+                <a href="../developer" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; background: rgba(220, 38, 38, 0.15); border: 1px solid rgba(220, 38, 38, 0.3); border-radius: 10px; color: #fff; text-decoration: none; font-size: 0.85rem; font-weight: 700; transition: all 0.2s;">
+                    🛠️ Developer Portal →
+                </a>
+            </div>
+                
+                <div class="user-row">
+                    <img id="dashboard-pfp-preview" src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
+                    <div>
+                        <div class="user-meta">Logged in as</div>
+                        <div id="user-display-email" class="user-email"></div>
+                    </div>
+                </div>
+                <button class="btn-danger" onclick="logOutUser()">Sign Out</button>
+                
+                <hr class="divider">
+
+                <form onsubmit="submitProfile(event)">
+                    <div id="pfp-drop-zone" class="drop-zone" onclick="document.getElementById('pfp-file-input').click()">
+                        <span>Click or drop an image to change avatar</span>
+                        <input type="file" id="pfp-file-input" accept="image/*" style="display:none;" onchange="handleUpload(event.target.files[0], 'pfp')">
+                    </div>
+                    <div id="upload-status" class="status-text"></div>
+                    
+                    <label>Display Name</label>
+                    <input type="text" id="display-name" placeholder="Seen by other players">
+
+                    <label>Username</label>
+                    <input type="text" id="username-input" placeholder="username" style="font-family: monospace;">
+
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                </form>
+
+                <hr class="divider">
+
+                <div class="section-header" style="color: #5865F2;">
+                    <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png"> 
+                    <h3>Discord</h3>
+                </div>
+                
+                <div id="discord-unlinked" style="display: none;">
+                    <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 12px;">Link your Discord account via the bot to sync your data.</p>
+                    <button class="btn-secondary" onclick="generateDiscordLinkCode()" style="background: #5865F2; color: white; border-color: #5865F2; width: 100%;">Generate Link Code</button>
+                    <p id="discord-link-code-display" style="display: none; text-align: center; font-size: 1.1rem; font-family: monospace; background: rgba(12,6,8,0.6); padding: 14px; border-radius: 8px; color: #4ade80; border: 1px dashed #5865F2; margin-top: 10px;"></p>
+                </div>
+                
+                <div id="discord-linked" class="linked-card" style="display: none;">
+                    <img id="discord-avatar" src="" style="border: 2px solid #5865F2;">
+                    <div style="flex: 1;">
+                        <div class="linked-label">Linked Account</div>
+                        <div id="discord-username" class="linked-name"></div>
+                    </div>
+                    <button class="btn-danger" style="width: auto; padding: 6px 12px; font-size: 0.8rem;" onclick="unlinkDiscord()">Unlink</button>
+                </div>
+
+                <hr class="divider">
+
+                <div class="section-header" style="color: #4ade80;">
+                    <img src="https://cdn-icons-png.flaticon.com/512/806/806008.png" style="filter: invert(1);"> 
+                    <h3>Meta Quest VR</h3>
+                </div>
+                
+                <div id="vr-unlinked">
+                    <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 12px;">Enter your 6-digit code from Crimson Protocol to link your VR inventory.</p>
+                    <form onsubmit="window.submitVRLinkCode(event)" style="display: flex; gap: 10px;">
+                        <input type="text" id="vr-link-input" placeholder="000000" maxlength="6" style="flex: 1; font-family: monospace; font-size: 1.15rem; text-align: center; letter-spacing: 4px;">
+                        <button type="submit" class="btn-primary" style="width: auto; margin-top: 0; background: #4ade80; color: #000; font-weight: 700; padding: 10px 18px;">Link</button>
+                    </form>
+                </div>
+
+                <div id="vr-linked" class="linked-card" style="display: none;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #4ade80; display: flex; align-items: center; justify-content: center;">
+                        <img src="https://cdn-icons-png.flaticon.com/512/806/806008.png" style="width: 20px; filter: invert(1);">
+                    </div>
+                    <div>
+                        <div class="linked-label">PlayFab Linked</div>
+                        <div id="vr-playfab-id" class="linked-name" style="font-family: monospace;"></div>
+                    </div>
+                </div>
+            <hr class="divider">
+
+            <div class="section-header" style="color: #60a5fa;">
+                <img src="https://cdn-icons-png.flaticon.com/512/1006/1006771.png" style="filter: invert(1); width: 20px;"> 
+                <h3>Connected Apps & Services</h3>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 14px; line-height: 1.5;">
+                External applications authorized via CrimsonFlame Single Sign-On.
+            </p>
+
+            <div id="connected-apps-list" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+                <p id="connected-apps-empty" style="color: var(--text-secondary); font-size: 0.85rem; text-align: center; padding: 12px; background: rgba(0,0,0,0.3); border-radius: 10px; border: 1px dashed rgba(255,255,255,0.1);">
+                    No connected applications yet.
+                </p>
+            </div>
+
+            <hr class="divider">
+
+            <div class="section-header" style="color: var(--crimson-light);">
+                <img src="https://cdn-icons-png.flaticon.com/512/3064/3064155.png" style="filter: invert(1); width: 20px;"> 
+                <h3>Developer Portal</h3>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 14px; line-height: 1.5;">
+                Create and manage SSO Link keys for your external applications & games.
+            </p>
+            <a href="../developer" class="btn-primary" style="display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; padding: 12px; font-weight: 700; background: var(--crimson);">
+                🛠️ Open Developer Dashboard →
+            </a>
+        </div>
+    </main>
+
+    <div id="custom-alert" class="custom-modal-overlay">
+        <div class="custom-modal-box">
+            <div class="custom-modal-content">
+                <h3 class="custom-modal-title">Alert</h3>
+                <p id="custom-alert-message" class="custom-modal-text"></p>
+                <button onclick="document.getElementById('custom-alert').classList.remove('active')" class="custom-modal-btn confirm" style="width: 100%;">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <p>© 2026 <strong>CrimsonFlame</strong>. All rights reserved. |
+            <a href="https://youtube.com/@crimsonflameofficial" target="_blank">
+                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 16px; height: 16px;">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+                YouTube
+            </a>
+        </p>
+    </footer>
+
+    <script>
+    // Floating particles
+    (function() {
+        const c = document.getElementById('particles');
+        for (let i = 0; i < 25; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const s = Math.random() * 3 + 1;
+            p.style.width = s + 'px';
+            p.style.height = s + 'px';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.top = Math.random() * 100 + '%';
+            p.style.animationDuration = (Math.random() * 12 + 8) + 's';
+            p.style.animationDelay = (Math.random() * 8) + 's';
+            p.style.opacity = Math.random() * 0.4 + 0.1;
+            c.appendChild(p);
+        }
+    })();
+    </script>
+
+    <script type="module" src="../dashboard.js"></script>
+</body>
+</html>

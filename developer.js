@@ -115,7 +115,7 @@ window.loadSSOLinks = async function() {
         }
 
         container.innerHTML = ssoItems.map(item => {
-            const linkUrl = `https://crimsonflame-official.github.io/link.html?linkkey=${item.linkkey}`;
+            const linkUrl = `https://crimsonflame-official.github.io/link?linkkey=${item.linkkey}`;
             const permsList = (item.permissions || []).map(p => `<li style="font-size: 0.8rem; color: #ede8ea;">✓ ${p}</li>`).join('');
             
             const totalAuths = item.totalAuthorizations || 0;
