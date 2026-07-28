@@ -423,6 +423,20 @@
             }
         }
 
+        function showLinkErrorPage() {
+            var linkCard = document.querySelector('.link-card');
+            if (linkCard) {
+                linkCard.innerHTML = `
+                    <div style="font-size: 3rem; margin-bottom: 10px;">⚠️</div>
+                    <h1 style="font-family: 'Outfit', sans-serif; font-size: 2.2rem; font-weight: 900; color: #fff; margin-bottom: 12px;">Uh Oh!</h1>
+                    <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.6; margin-bottom: 24px;">
+                        It seems there isnt a webpage here. Try again later.
+                    </p>
+                    <a href="index.html" class="btn-authorize" style="display: inline-block; text-decoration: none; max-width: 200px; margin: 0 auto;">Return Home</a>
+                `;
+            }
+        }
+
         // Check if linkkey parameter was provided
         if (linkKey) {
             // First check local storage cache
@@ -437,21 +451,22 @@
             getDoc(doc(db, "sso_links", linkKey)).then(docSnap => {
                 if (docSnap.exists()) {
                     applySSOAppDetails(docSnap.data());
+                } else if (!localStorage.getItem('cf_sso_key_' + linkKey)) {
+                    showLinkErrorPage();
                 }
             }).catch(err => {
                 console.warn("Could not fetch SSO linkkey from Firestore:", err);
             });
-        } else {
-            // Fallback for direct params ?service= and ?logo=
-            if (serviceName) {
-                document.getElementById('service-name-text').textContent = serviceName;
-                document.getElementById('link-header-title').textContent = 'Link with ' + serviceName + '?';
-            }
+        } else if (serviceName) {
+            document.getElementById('service-name-text').textContent = serviceName;
+            document.getElementById('link-header-title').textContent = 'Link with ' + serviceName + '?';
             var appLogo = urlParams.get('logo');
             if (appLogo) {
                 var logoEl = document.getElementById('service-logo');
                 if (logoEl) logoEl.src = decodeURIComponent(appLogo);
             }
+        } else {
+            showLinkErrorPage();
         }
 
         var currentUser = null;
