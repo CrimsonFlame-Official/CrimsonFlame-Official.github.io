@@ -29,7 +29,6 @@
         </a>
         <a href="../index.html" class="pill-link">Home</a>
         <a href="../projects" class="pill-link">Projects</a>
-        <a href="../developer" class="pill-link">Developer</a>
         <a href="../support" class="pill-link">Support</a>
     </nav>
 
@@ -60,9 +59,9 @@
                 User Settings
             </h1>
 
-            <div class="dashboard-grid-layout" style="display: grid; grid-template-columns: 310px 1fr; gap: 24px; text-align: left; align-items: start;">
+            <div class="dashboard-grid-layout" style="display: grid; grid-template-columns: 310px 1fr; gap: 24px; text-align: left; align-items: start; margin-bottom: 32px;">
                 
-                <!-- Left Column: Profile Card + Blocks Underneath -->
+                <!-- Left Column: Profile Card + Discord Block Underneath -->
                 <div style="display: flex; flex-direction: column; gap: 24px;">
                     
                     <!-- Left Block 1: Profile Badge Card -->
@@ -76,25 +75,11 @@
                         <button class="btn-danger" onclick="logOutUser()" style="width: 100%;">Sign Out</button>
                     </div>
 
-                    <!-- Left Block 2: Developer Portal (Under Profile) -->
-                    <div class="dash-card" style="margin-bottom: 0;">
-                        <div class="section-header" style="color: var(--crimson-light); margin-bottom: 12px;">
-                            <img src="https://cdn-icons-png.flaticon.com/512/3064/3064155.png" style="filter: invert(1); width: 20px;"> 
-                            <h3 style="margin: 0; font-family: 'Outfit', sans-serif;">Developer Portal</h3>
-                        </div>
-                        <p style="color: var(--text-secondary); font-size: 0.86rem; line-height: 1.6; margin-bottom: 18px;">
-                            Create and manage <strong>Single Sign-On (SSO) Link Keys</strong> for your external applications & games.
-                        </p>
-                        <a href="../developer" class="btn-primary" style="display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; padding: 12px; font-weight: 700; background: var(--crimson); text-align: center;">
-                            🛠️ Open Developer Dashboard →
-                        </a>
-                    </div>
-
-                    <!-- Left Block 3: Discord Integration (Under Developer Portal) -->
+                    <!-- Left Block 2: Discord Integration (Under Profile) -->
                     <div class="dash-card" style="margin-bottom: 0;">
                         <div class="section-header" style="color: #5865F2; margin-bottom: 12px;">
                             <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" style="width: 20px;"> 
-                            <h3 style="margin: 0; font-family: 'Outfit', sans-serif;">Discord</h3>
+                            <h3 style="margin: 0; font-family: 'Outfit', sans-serif;">Discord Integration</h3>
                         </div>
                         
                         <div id="discord-unlinked" style="display: none;">
@@ -115,7 +100,7 @@
 
                 </div>
 
-                <!-- Right Column: Settings & Integrations -->
+                <!-- Right Column: Profile Settings, Meta Quest, Connected Apps -->
                 <div style="display: flex; flex-direction: column; gap: 24px;">
                     
                     <!-- Right Block 1: Profile Settings -->
@@ -151,7 +136,7 @@
                             <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 14px; line-height: 1.5;">Enter 6-digit code from Crimson Protocol to link VR inventory.</p>
                             <form onsubmit="window.submitVRLinkCode(event)" style="display: flex; gap: 10px;">
                                 <input type="text" id="vr-link-input" placeholder="000000" maxlength="6" style="flex: 1; font-family: monospace; font-size: 1.1rem; text-align: center; letter-spacing: 4px;">
-                                <button type="submit" class="btn-primary" style="width: auto; margin-top: 0; background: #4ade80; color: #000; font-weight: 700; padding: 8px 18px;">Link</button>
+                                <button type="submit" class="btn-primary" style="width: auto; margin-top: 0; background: #4ade80; color: #000; font-weight: 700; padding: 8px 16px;">Link</button>
                             </form>
                         </div>
 
@@ -185,6 +170,25 @@
 
                 </div>
             </div>
+
+            <!-- Bottom Block (Very Bottom of Page): Developer Portal -->
+            <div class="dash-card" style="width: 100%; margin-top: 12px; border: 1px solid rgba(217, 4, 41, 0.3); background: rgba(22, 12, 16, 0.85); text-align: left;">
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+                    <div>
+                        <div class="section-header" style="color: var(--crimson-light); margin-bottom: 6px;">
+                            <img src="https://cdn-icons-png.flaticon.com/512/3064/3064155.png" style="filter: invert(1); width: 22px;"> 
+                            <h3 style="margin: 0; font-family: 'Outfit', sans-serif; font-size: 1.4rem; font-weight: 800; color: #fff;">Developer Portal</h3>
+                        </div>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; max-width: 650px; margin: 0;">
+                            Are you a developer? Create and manage <strong>Single Sign-On (SSO) Link Keys</strong> for your external applications, games, and web services.
+                        </p>
+                    </div>
+                    <a href="../developer" class="btn-primary" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; padding: 14px 28px; font-weight: 800; font-size: 0.95rem; background: var(--crimson); white-space: nowrap;">
+                        🛠️ Open Developer Dashboard →
+                    </a>
+                </div>
+            </div>
+
         </div>
     </main>
 
