@@ -333,11 +333,13 @@ body {
 
 
 .hero-left {
-
     flex: 1;
-
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 420px;
     max-width: 480px;
-
 }
 
 
@@ -563,19 +565,9 @@ body {
 /* ─── Hero Right: Animated Orb ─── */
 
 .hero-right {
-
-    flex: 1;
-
-    position: relative;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    min-height: 420px;
-
+    flex: 1.2;
+    max-width: 580px;
+    text-align: left;
 }
 
 
