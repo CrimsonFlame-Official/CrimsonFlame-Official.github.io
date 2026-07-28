@@ -198,8 +198,15 @@ window.revokeConnectedApp = async function(appId) {
     if (!confirm("Are you sure you want to revoke access for this application?")) return;
     try {
         await deleteDoc(doc(db, "users", currentUser.uid, "connected_apps", appId));
+        const snap = await getDocs(collection(db, "users", currentUser.uid, "connected_apps"));
+        snap.forEach(async (d) => {
+            const data = d.data();
+            if (d.id === appId || data.linkkey === appId || (data.appName && data.appName.toLowerCase().includes(appId.toLowerCase()))) {
+                await deleteDoc(doc(db, "users", currentUser.uid, "connected_apps", d.id));
+            }
+        });
         window.showCustomAlert("Application access revoked.");
-        window.loadConnectedApps();
+        setTimeout(() => window.loadConnectedApps(), 300);
     } catch(err) {
         window.showCustomAlert("Failed to revoke access: " + err.message);
     }
@@ -213,6 +220,8 @@ onAuthStateChanged(auth, user => {
         document.getElementById('login-container').style.display = 'none';
         document.getElementById('dashboard-container').style.display = 'block';
         document.getElementById('user-display-email').innerText = user.email;
+        const nameEl = document.getElementById('user-sidebar-name');
+        if (nameEl) nameEl.innerText = user.displayName || user.email.split('@')[0];
         document.getElementById('display-name').value = user.displayName || "";
         document.getElementById('dashboard-pfp-preview').src = user.photoURL || DEFAULT_PFP;
         
