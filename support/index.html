@@ -8,6 +8,20 @@
 </head>
 <body>
 
+    <!-- Global Custom Crimson Loading Animation -->
+    <div id="page-loader">
+        <img src="/assets/loading.gif" alt="Loading..." class="loader-video">
+        <div class="loader-title">CrimsonFlame</div>
+    </div>
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                var l = document.getElementById('page-loader');
+                if (l) l.classList.add('fade-out');
+            }, 300);
+        });
+    </script>
+
     <!-- Ambient Glow Backgrounds -->
     <div class="bg-glow"></div>
     <div class="bg-glow-2"></div>

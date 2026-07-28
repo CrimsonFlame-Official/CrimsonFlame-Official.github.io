@@ -78,6 +78,9 @@
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(217, 4, 41, 0.2);
             backdrop-filter: blur(16px);
             text-align: center;
+            opacity: 0;
+            transform: scale(0.94);
+            transition: opacity 0.4s ease, transform 0.4s ease;
         }
 
         .link-avatars {
@@ -257,6 +260,12 @@
 </head>
 <body>
 
+    <!-- Global Custom Crimson Loading Animation -->
+    <div id="page-loader">
+        <img src="/assets/loading.gif" alt="Loading..." class="loader-video">
+        <div class="loader-title">CrimsonFlame</div>
+    </div>
+
     <nav>
         <div class="nav-logo">CrimsonFlame<span>-Official</span> | Single Sign-On</div>
         <div class="nav-links">
@@ -423,6 +432,25 @@
             }
         }
 
+        function revealSSOPopup() {
+            var loader = document.getElementById('page-loader');
+            var linkCard = document.querySelector('.link-card');
+            if (loader) loader.classList.add('fade-out');
+            if (linkCard) {
+                linkCard.style.opacity = '1';
+                linkCard.style.transform = 'scale(1)';
+            }
+        }
+
+        var isDataReady = false;
+        var isAuthReady = false;
+
+        function checkAndReveal() {
+            if (isDataReady && isAuthReady) {
+                setTimeout(revealSSOPopup, 200);
+            }
+        }
+
         function showLinkErrorPage() {
             var linkCard = document.querySelector('.link-card');
             if (linkCard) {
@@ -432,9 +460,11 @@
                     <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.6; margin-bottom: 24px;">
                         It seems there isnt a webpage here. Try again later.
                     </p>
-                    <a href="../index.html" class="btn-authorize" style="display: inline-block; text-decoration: none; max-width: 200px; margin: 0 auto;">Return Home</a>
+                    <a href="/index.html" class="btn-authorize" style="display: inline-block; text-decoration: none; max-width: 200px; margin: 0 auto;">Return Home</a>
                 `;
             }
+            isDataReady = true;
+            checkAndReveal();
         }
 
         // Check if linkkey parameter was provided
@@ -451,11 +481,18 @@
             getDoc(doc(db, "sso_links", linkKey)).then(docSnap => {
                 if (docSnap.exists()) {
                     applySSOAppDetails(docSnap.data());
+                    isDataReady = true;
+                    checkAndReveal();
                 } else if (!localStorage.getItem('cf_sso_key_' + linkKey)) {
                     showLinkErrorPage();
+                } else {
+                    isDataReady = true;
+                    checkAndReveal();
                 }
             }).catch(err => {
                 console.warn("Could not fetch SSO linkkey from Firestore:", err);
+                isDataReady = true;
+                checkAndReveal();
             });
         } else if (serviceName) {
             document.getElementById('service-name-text').textContent = serviceName;
@@ -465,6 +502,8 @@
                 var logoEl = document.getElementById('service-logo');
                 if (logoEl) logoEl.src = decodeURIComponent(appLogo);
             }
+            isDataReady = true;
+            checkAndReveal();
         } else {
             showLinkErrorPage();
         }
@@ -516,6 +555,8 @@
                     btn.style.opacity = '0.5';
                 }
             }
+            isAuthReady = true;
+            checkAndReveal();
         });
 
         window.authorizeLinking = function() {
