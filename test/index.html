@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrimsonFlame | Staging & Testing Sandbox</title>
+    <meta name="description" content="Live testing environment for upcoming CrimsonFlame features, UI components, and animations.">
+    <link rel="icon" type="image/png" href="/assets/loading.gif">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        .staging-banner {
+            background: linear-gradient(135deg, rgba(255, 107, 0, 0.15), rgba(255, 0, 85, 0.15));
+            border: 1px solid rgba(255, 107, 0, 0.3);
+            border-radius: 12px;
+            padding: 16px 24px;
+            max-width: 1000px;
+            margin: 40px auto 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .staging-tag {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: #FF6B00;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .test-card {
+            background: rgba(22, 22, 28, 0.75);
+            border: 1px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 24px;
+            backdrop-filter: blur(12px);
+        }
+        .test-card h4 {
+            color: #00E699;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <!-- Page Loader -->
+    <div id="page-loader">
+        <img src="/assets/loading.gif" alt="Loading..." class="loader-video">
+        <div class="loader-title">STAGING ENVIRONMENT</div>
+    </div>
+
+    <!-- Main Navigation Header -->
+    <header class="site-header">
+        <nav class="pill-navbar">
+            <a href="/" class="nav-brand">
+                <img src="/assets/loading.gif" alt="Logo" class="nav-logo">
+                <span class="nav-title">CrimsonFlame</span>
+            </a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/projects">Projects</a>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/archive">Vault & Archive</a>
+                <a href="/test" class="active">Staging Test</a>
+                <a href="/support">Support</a>
+            </div>
+            <div class="nav-right">
+                <a href="/link" class="btn-sso-link">🔒 SSO Login</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="staging-banner">
+            <div>
+                <span class="staging-tag">🧪 Experimental Environment</span>
+                <h2 style="color: #FFFFFF; font-size: 1.5rem; margin-top: 4px;">Live Feature Sandbox</h2>
+            </div>
+            <a href="/archive" style="color: #A0A0B0; text-decoration: none; font-size: 0.9rem;">View Version Vault →</a>
+        </div>
+
+        <section class="test-grid">
+            <div class="test-card">
+                <h4>⚡ Animation Benchmark</h4>
+                <p style="color: #A0A0B0; font-size: 0.9rem;">Testing keyframe hardware acceleration across custom ring loaders and glowing starburst elements.</p>
+            </div>
+            <div class="test-card">
+                <h4>🔑 SSO Token Auth Validation</h4>
+                <p style="color: #A0A0B0; font-size: 0.9rem;">Validating Firebase Auth state triggers and deferred card popups across subfolder routes.</p>
+            </div>
+            <div class="test-card">
+                <h4>🕹️ Multiplayer VR Sync Protocol</h4>
+                <p style="color: #A0A0B0; font-size: 0.9rem;">Testing low-latency UDP/WebSocket locomotion state streaming for Campus VR.</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        window.addEventListener('load', function() {
+            var loader = document.getElementById('page-loader');
+            if (loader) {
+                loader.classList.add('fade-out');
+                setTimeout(function() { loader.style.display = 'none'; }, 500);
+            }
+        });
+    </script>
+</body>
+</html>
