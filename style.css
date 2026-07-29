@@ -618,15 +618,13 @@ body {
 
 
 .orb-container {
-
     position: relative;
-
-    width: 280px;
-
-    height: 280px;
-
-    transition: transform 0.3s ease-out;
-
+    width: 340px;
+    height: 340px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
 }
 
 
