@@ -3,18 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Developer Dashboard | CrimsonFlame</title>
+    <title>CrimX Developer Portal</title>
     <link rel="stylesheet" href="/style.css?v=7">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        .code-block {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 14px;
+            font-family: monospace;
+            font-size: 0.82rem;
+            color: #4ade80;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin-top: 8px;
+        }
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.84rem;
+            transition: all 0.2s;
+        }
+        .tab-btn.active {
+            background: var(--crimson);
+            border-color: var(--crimson-light);
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
 
     <!-- Global Custom Crimson Loading Animation -->
     <div id="page-loader">
         <img src="/assets/loading.gif" alt="Loading..." class="loader-video">
-        <div class="loader-title">CrimsonFlame</div>
+        <div class="loader-title">CrimX Developer</div>
     </div>
     <script>
         function hidePageLoader() {
@@ -44,12 +75,12 @@
         <a href="/support" class="pill-link">Support</a>
     </nav>
 
-    <main class="dash-main">
+    <main class="dash-main" style="max-width: 760px;">
         <!-- Auth Required Notice (shown when signed out) -->
-        <div id="dev-auth-notice" class="dash-card" style="max-width: 480px; text-align: center;">
-            <h2>Developer Portal</h2>
+        <div id="dev-auth-notice" class="dash-card" style="max-width: 480px; text-align: center; margin: 0 auto;">
+            <h2>CrimX Developer Portal</h2>
             <p style="color: var(--text-secondary); margin-bottom: 20px; line-height: 1.5;">
-                Please sign in on the main dashboard to access your Developer Portal & manage SSO Links.
+                Please sign in to access your Developer Portal, manage CrimX applications, and generate Client IDs and Secrets.
             </p>
             <a href="/dashboard" class="btn-primary" style="display: inline-block; text-decoration: none; width: 100%;">
                 Go to Sign In
@@ -57,25 +88,27 @@
         </div>
 
         <!-- Developer Dashboard Main View -->
-        <div id="dev-dashboard-container" class="dash-card" style="display: none; max-width: 620px;">
+        <div id="dev-dashboard-container" class="dash-card" style="display: none; width: 100%;">
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-                <h2 style="margin: 0;">🛠️ Developer Dashboard</h2>
+                <h2 style="margin: 0; display: flex; align-items: center; gap: 10px;">
+                    🛠️ CrimX Developer Portal
+                </h2>
                 <a href="/dashboard" style="color: var(--text-secondary); text-decoration: none; font-size: 0.88rem; font-weight: 600;">← Back to Profile</a>
             </div>
             
             <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 24px; line-height: 1.5;">
-                Create <strong>SSO Links</strong> to integrate CrimsonFlame Single Sign-On into external applications, games, or services.
+                Register applications for <strong>CrimX Auth</strong>. Allow games, VR worlds, and external web services to securely authenticate CrimsonFlame players.
             </p>
 
-            <!-- Create SSO Link Form -->
+            <!-- Register CrimX App Form -->
             <div style="background: rgba(0,0,0,0.3); padding: 22px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); margin-bottom: 28px;">
                 <h3 style="font-size: 1.15rem; margin-bottom: 16px; color: #fff; display: flex; align-items: center; gap: 8px;">
-                    🔑 Create New SSO Link
+                    🔑 Register New CrimX App
                 </h3>
 
                 <form onsubmit="window.createSSOLink(event)">
-                    <label>App / Service Name *</label>
-                    <input type="text" id="sso-app-name" placeholder="e.g. Campus VR or My Game" required>
+                    <label>Game / Application Name *</label>
+                    <input type="text" id="sso-app-name" placeholder="e.g. Campus VR, Project Crimson, or My Game" required>
 
                     <label>App Logo / Icon URL</label>
                     <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 12px;">
@@ -85,44 +118,125 @@
                     </div>
                     <div id="sso-logo-status" class="status-text" style="display:none;"></div>
 
-                    <label>Default Redirect URL (Optional)</label>
-                    <input type="url" id="sso-redirect-url" placeholder="e.g. http://localhost:9090 or https://myapp.com">
+                    <label>Allowed Redirect URIs * (One per line or comma-separated)</label>
+                    <textarea id="sso-redirect-url" rows="3" placeholder="e.g. http://localhost:3000/callback&#10;https://mygame.com/auth/crimx&#10;myapp://callback" style="width: 100%; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: #fff; padding: 12px; font-family: monospace; font-size: 0.88rem; margin-bottom: 14px; box-sizing: border-box;" required></textarea>
+                    <div style="font-size: 0.76rem; color: var(--text-secondary); margin-top: -8px; margin-bottom: 14px;">
+                        🛡️ Whitelisted callback URLs. CrimX Gatekeeper strictly blocks requests trying to redirect elsewhere.
+                    </div>
 
-                    <label>Permissions Needed</label>
+                    <label>Requested Permissions (Scopes)</label>
                     <div style="background: rgba(0,0,0,0.3); padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); margin-bottom: 14px; display: flex; flex-direction: column; gap: 10px;">
                         <label style="display: flex; align-items: center; gap: 10px; font-weight: 500; cursor: pointer; text-transform: none; font-size: 0.88rem; color: #ede8ea;">
                             <input type="checkbox" id="perm-profile" checked style="width: 16px; height: 16px; accent-color: var(--crimson);">
-                            <span>Access your display name & profile picture</span>
+                            <span>Access player display name & avatar (profile)</span>
                         </label>
                         <label style="display: flex; align-items: center; gap: 10px; font-weight: 500; cursor: pointer; text-transform: none; font-size: 0.88rem; color: #ede8ea;">
                             <input type="checkbox" id="perm-email" checked style="width: 16px; height: 16px; accent-color: var(--crimson);">
-                            <span>View your email address</span>
+                            <span>View verified email address (email)</span>
                         </label>
                         <label style="display: flex; align-items: center; gap: 10px; font-weight: 500; cursor: pointer; text-transform: none; font-size: 0.88rem; color: #ede8ea;">
                             <input type="checkbox" id="perm-sso" checked style="width: 16px; height: 16px; accent-color: var(--crimson);">
-                            <span>Authenticate via CrimsonFlame SSO</span>
+                            <span>Authenticate genuine identity via CrimX Auth</span>
                         </label>
                     </div>
 
-                    <label>Custom Permissions (Comma-separated)</label>
-                    <input type="text" id="sso-custom-perms" placeholder="e.g. Sync Chat History, Connect VR Inventory">
+                    <label>Custom Scopes (Optional, comma-separated)</label>
+                    <input type="text" id="sso-custom-perms" placeholder="e.g. game_save_data, vr_inventory">
 
                     <button type="submit" id="btn-create-sso" class="btn-primary" style="margin-top: 10px;">
-                        ✨ Generate SSO Link Key
+                        ✨ Register CrimX App
                     </button>
                 </form>
             </div>
 
-            <!-- Active SSO Keys List -->
-            <div class="section-header" style="color: var(--crimson-light);">
-                <img src="https://cdn-icons-png.flaticon.com/512/3064/3064155.png" style="filter: invert(1); width: 20px;"> 
-                <h3>Your SSO Applications & Keys</h3>
+            <!-- Active CrimX Apps List -->
+            <div class="section-header" style="color: var(--crimson-light); margin-bottom: 12px;">
+                <img src="https://cdn-icons-png.flaticon.com/512/3064/3064155.png" style="filter: invert(1); width: 20px;" alt="Apps"> 
+                <h3>Your CrimX Applications</h3>
             </div>
 
-            <div id="sso-links-list" style="display: flex; flex-direction: column; gap: 16px; margin-top: 14px;">
+            <div id="sso-links-list" style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 36px;">
                 <p id="sso-empty-msg" style="color: var(--text-secondary); font-size: 0.88rem; text-align: center; padding: 20px;">
-                    No SSO Links created yet. Fill out the form above to generate your first key!
+                    No CrimX Apps created yet. Fill out the form above to register your first game or app!
                 </p>
+            </div>
+
+            <!-- Live Token Exchange Tester (Playground) -->
+            <div style="background: rgba(0,0,0,0.35); padding: 22px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); margin-bottom: 28px;">
+                <h3 style="font-size: 1.15rem; margin-bottom: 8px; color: #fff; display: flex; align-items: center; gap: 8px;">
+                    🧪 Live Token Exchange Tester
+                </h3>
+                <p style="color: var(--text-secondary); font-size: 0.84rem; margin-bottom: 16px; line-height: 1.4;">
+                    Test your backend token exchange in real time. Paste a temporary <code>crimx_code_...</code> from a test login to inspect the verified player profile and issued access token.
+                </p>
+
+                <form onsubmit="window.testLiveExchange(event)" style="display: flex; flex-direction: column; gap: 10px;">
+                    <div>
+                        <label style="font-size: 0.78rem;">Authorization Code (from redirect URL)</label>
+                        <input type="text" id="test-exchange-code" placeholder="crimx_code_..." required style="margin-bottom: 0;">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div>
+                            <label style="font-size: 0.78rem;">Client ID</label>
+                            <input type="text" id="test-client-id" placeholder="crimx_client_..." required style="margin-bottom: 0;">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.78rem;">Client Secret</label>
+                            <input type="password" id="test-client-secret" placeholder="crimx_secret_..." style="margin-bottom: 0;">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="margin-top: 6px; padding: 10px;">
+                        ⚡ Test Exchange Code
+                    </button>
+                </form>
+
+                <div style="margin-top: 14px;">
+                    <div style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 700;">Exchange Response:</div>
+                    <pre id="test-exchange-output" class="code-block" style="color: #94a3b8; min-height: 48px;">Awaiting test submission...</pre>
+                </div>
+            </div>
+
+            <!-- Developer Integration Docs & SDK Quickstart -->
+            <div style="background: rgba(0,0,0,0.35); padding: 22px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08);">
+                <h3 style="font-size: 1.15rem; margin-bottom: 12px; color: #fff; display: flex; align-items: center; gap: 8px;">
+                    📖 SDK Quickstart & Integration
+                </h3>
+
+                <div style="display: flex; gap: 8px; margin-bottom: 14px;">
+                    <button class="tab-btn active" onclick="window.switchCodeTab('js', this)">JavaScript / Web</button>
+                    <button class="tab-btn" onclick="window.switchCodeTab('node', this)">Node.js Backend</button>
+                    <button class="tab-btn" onclick="window.switchCodeTab('py', this)">Python</button>
+                    <button class="tab-btn" onclick="window.switchCodeTab('curl', this)">cURL</button>
+                </div>
+
+                <div id="code-snippet-container">
+                    <pre class="code-block" id="active-code-snippet">// 1. Include the CrimX SDK in your web app:
+import { CrimX } from "https://crimsonflame.net/crimx.js";
+
+// 2. Redirect player to CrimX Auth:
+const loginUrl = CrimX.getAuthUrl({
+  clientId: "YOUR_CLIENT_ID",
+  redirectUri: "https://yourgame.com/callback",
+  scope: "profile email",
+  state: "secure_random_state_123"
+});
+window.location.href = loginUrl;
+
+// 3. On your callback page, parse response:
+const callback = CrimX.parseCallback();
+if (callback.success) {
+  // Exchange code for verified player profile!
+  const session = await CrimX.exchangeCode({
+    code: callback.code,
+    clientId: "YOUR_CLIENT_ID"
+  });
+  console.log("Logged in as:", session.user.name, session.user.uid);
+} else {
+  // Handles errors like user cancelling or access denied
+  alert("In-Game Login Error: " + callback.errorDescription);
+}</pre>
+                </div>
             </div>
         </div>
     </main>
@@ -130,7 +244,7 @@
     <div id="custom-alert" class="custom-modal-overlay">
         <div class="custom-modal-box">
             <div class="custom-modal-content">
-                <h3 class="custom-modal-title">Alert</h3>
+                <h3 class="custom-modal-title">CrimX Developer</h3>
                 <p id="custom-alert-message" class="custom-modal-text"></p>
                 <button onclick="document.getElementById('custom-alert').classList.remove('active')" class="custom-modal-btn confirm" style="width: 100%;">OK</button>
             </div>
@@ -138,7 +252,7 @@
     </div>
 
     <footer class="site-footer">
-        <p>© 2026 <strong>CrimsonFlame</strong>. All rights reserved.</p>
+        <p>© 2026 <strong>CrimsonFlame</strong> • CrimX Auth</p>
     </footer>
 
     <script>
@@ -159,6 +273,88 @@
             c.appendChild(p);
         }
     })();
+
+    const SNIPPETS = {
+        js: `// 1. Include the CrimX SDK in your web app:
+import { CrimX } from "https://crimsonflame.net/crimx.js";
+
+// 2. Redirect player to CrimX Auth:
+const loginUrl = CrimX.getAuthUrl({
+  clientId: "YOUR_CLIENT_ID",
+  redirectUri: "https://yourgame.com/callback",
+  scope: "profile email",
+  state: "secure_random_state_123"
+});
+window.location.href = loginUrl;
+
+// 3. On your callback page, parse response:
+const callback = CrimX.parseCallback();
+if (callback.success) {
+  // Exchange code for verified player profile!
+  const session = await CrimX.exchangeCode({
+    code: callback.code,
+    clientId: "YOUR_CLIENT_ID"
+  });
+  console.log("Logged in as:", session.user.name, session.user.uid);
+} else {
+  // Handles errors like user cancelling or access denied
+  alert("In-Game Login Error: " + callback.errorDescription);
+}`,
+        node: `// Node.js Backend Exchange Example:
+import { CrimX } from "https://crimsonflame.net/crimx.js"; // or import from ./crimx.js
+
+app.get('/callback', async (req, res) => {
+  const { code, state, error } = req.query;
+
+  if (error) {
+    return res.status(400).send("Login failed: " + error);
+  }
+
+  try {
+    const session = await CrimX.exchangeCode({
+      code: code,
+      clientId: process.env.CRIMX_CLIENT_ID,
+      clientSecret: process.env.CRIMX_CLIENT_SECRET
+    });
+
+    // Session contains verified player profile:
+    // session.user.uid, session.user.name, session.user.email
+    req.session.player = session.user;
+    res.redirect('/game');
+  } catch(err) {
+    res.status(401).send("Verification failed: " + err.message);
+  }
+});`,
+        py: `# Python / Flask or FastAPI backend exchange:
+from fastapi import FastAPI, Request
+from crimx import CrimX # or query Firestore crimx_codes
+
+@app.get("/callback")
+async def callback(code: str, state: str = None, error: str = None):
+    if error:
+        return {"error": "Access Denied", "details": error}
+        
+    # Exchange single-use code for verified player
+    session = await CrimX.exchange_code(
+        code=code,
+        client_id="YOUR_CLIENT_ID",
+        client_secret="YOUR_CLIENT_SECRET"
+    )
+    return {"status": "authenticated", "player": session["user"]}`,
+        curl: `# Exchange an authorization code:
+# Using the CrimX SDK or Firestore document lookup:
+curl -X POST "https://crimsonflame.net/auth/token" \\
+  -d "grant_type=authorization_code" \\
+  -d "code=crimx_code_abc123" \\
+  -d "client_id=YOUR_CLIENT_ID" \\
+  -d "client_secret=YOUR_CLIENT_SECRET"`
+    };
+
+    window.switchCodeTab = function(lang, btn) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('active-code-snippet').innerText = SNIPPETS[lang] || SNIPPETS.js;
+    };
     </script>
 
     <script type="module" src="/developer.js"></script>

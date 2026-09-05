@@ -52,40 +52,42 @@ window.routeTo = function(page) {
 };
 
 const urlParams = new URLSearchParams(window.location.search);
-const oauthAppName = urlParams.get('app_name');
-const oauthRedirectUri = urlParams.get('redirect_uri');
+const quickAuthAppName = urlParams.get('app_name');
+const quickAuthRedirectUri = urlParams.get('redirect_uri');
 
-if (isIndex && oauthAppName && oauthRedirectUri) {
+if (isIndex && quickAuthAppName && quickAuthRedirectUri) {
     setTimeout(() => {
         document.querySelectorAll('.page-content').forEach(p => p.style.display = 'none');
-        document.getElementById('page-oauth').style.display = 'flex';
-        document.getElementById('oauth-title').innerText = `Connect to ${oauthAppName}`;
+        const modal = document.getElementById('page-auth-quick');
+        if (modal) modal.style.display = 'flex';
+        const title = document.getElementById('auth-quick-title');
+        if (title) title.innerText = `Connect to ${quickAuthAppName}`;
         var nav = document.querySelector('.pill-nav');
         if (nav) nav.style.display = 'none';
     }, 150);
 }
 
-window.updateOAuthUI = function() {
-    if (!oauthAppName || !document.getElementById('page-oauth')) return;
+window.updateQuickAuthUI = function() {
+    if (!quickAuthAppName || !document.getElementById('page-auth-quick')) return;
     if (currentUser) {
-        document.getElementById('oauth-user-info').style.display = 'block';
-        document.getElementById('oauth-login-prompt').style.display = 'none';
-        document.getElementById('oauth-actions').style.display = 'flex';
-        document.getElementById('oauth-name').innerText = currentUser.displayName || currentUser.email.split('@')[0];
-        document.getElementById('oauth-email').innerText = currentUser.email;
-        document.getElementById('oauth-pfp').src = currentUser.photoURL || DEFAULT_PFP;
+        document.getElementById('auth-quick-user-info').style.display = 'block';
+        document.getElementById('auth-quick-login-prompt').style.display = 'none';
+        document.getElementById('auth-quick-actions').style.display = 'flex';
+        document.getElementById('auth-quick-name').innerText = currentUser.displayName || currentUser.email.split('@')[0];
+        document.getElementById('auth-quick-email').innerText = currentUser.email;
+        document.getElementById('auth-quick-pfp').src = currentUser.photoURL || DEFAULT_PFP;
     } else {
-        document.getElementById('oauth-user-info').style.display = 'none';
-        document.getElementById('oauth-login-prompt').style.display = 'block';
-        document.getElementById('oauth-actions').style.display = 'none';
+        document.getElementById('auth-quick-user-info').style.display = 'none';
+        document.getElementById('auth-quick-login-prompt').style.display = 'block';
+        document.getElementById('auth-quick-actions').style.display = 'none';
     }
 };
 
-window.cancelOAuth = function() { window.location.href = `${oauthRedirectUri}?cf_auth=canceled`; };
-window.approveOAuth = function() {
+window.cancelQuickAuth = function() { window.location.href = `${quickAuthRedirectUri}?cf_auth=canceled`; };
+window.approveQuickAuth = function() {
     if (!currentUser) return;
     const userData = { uid: currentUser.uid, name: currentUser.displayName || currentUser.email.split('@')[0], email: currentUser.email, pfp: currentUser.photoURL || DEFAULT_PFP };
-    window.location.href = `${oauthRedirectUri}?cf_auth=success&user_data=${encodeURIComponent(JSON.stringify(userData))}`;
+    window.location.href = `${quickAuthRedirectUri}?cf_auth=success&user_data=${encodeURIComponent(JSON.stringify(userData))}`;
 };
 
 window.showCustomPrompt = function(title, desc, placeholder, onConfirm) {
@@ -303,7 +305,7 @@ onAuthStateChanged(auth, user => {
         if (isIndex) {
             if (isGlobalAdmin && document.getElementById('admin-home-editor')) document.getElementById('admin-home-editor').style.display = 'block';
             if (isGlobalAdmin && document.getElementById('admin-panel')) document.getElementById('admin-panel').style.display = 'block';
-            window.updateOAuthUI();
+            window.updateQuickAuthUI();
         }
 
     } else {
@@ -313,7 +315,7 @@ onAuthStateChanged(auth, user => {
         if (currentPage === 'dashboard.html') { document.getElementById('login-container').style.display = 'block'; document.getElementById('dashboard-container').style.display = 'none'; }
         if (currentPage === 'chatter.html') { document.getElementById('chatter-locked').style.display = 'block'; document.getElementById('chatter-system').style.display = 'none'; }
         if (currentPage === 'support.html') { document.getElementById('support-locked').style.display = 'block'; document.getElementById('support-system').style.display = 'none'; }
-        if (isIndex) { window.updateOAuthUI(); }
+        if (isIndex) { window.updateQuickAuthUI(); }
         if (userDocUnsub) { userDocUnsub(); userDocUnsub = null; }
     }
 });
