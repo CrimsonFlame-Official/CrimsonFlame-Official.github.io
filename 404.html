@@ -3,122 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uh Oh! | CrimsonFlame Official</title>
-    <link rel="stylesheet" href="style.css">
+    <title>404 - Lost in the Crimson Void | CrimsonFlame</title>
+    <link rel="stylesheet" href="/style.css?v=8">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-dark: #0a0a0c;
-            --glass-panel: rgba(22, 22, 26, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --crimson: #d90429;
-            --flame: #ff6b35;
-            --text-light: #fbfbfc;
-            --text-muted: #94a3b8;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
-            background-image: radial-gradient(circle at 50% 40%, rgba(217, 4, 41, 0.15) 0%, transparent 60%);
-            color: var(--text-light);
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 40px;
-            border-bottom: 1px solid var(--glass-border);
-            backdrop-filter: blur(12px);
-        }
-
-        .nav-logo {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--text-light);
-        }
-
-        .nav-logo span { color: var(--crimson); }
-
-        .nav-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-            margin-left: 20px;
-            font-size: 0.9rem;
-            transition: color 0.2s ease;
-        }
-
-        .nav-links a:hover { color: #fff; }
-
         .error-viewport {
-            flex: 1;
+            min-height: calc(100vh - 120px);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 40px 20px;
+            padding: 90px 20px 40px;
+            position: relative;
+            z-index: 10;
         }
 
         .error-card {
-            background: var(--glass-panel);
-            border: 1px solid var(--glass-border);
+            background: rgba(20, 11, 16, 0.85);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(220, 38, 38, 0.35);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 35px rgba(220, 38, 38, 0.2);
             border-radius: 24px;
+            max-width: 520px;
             width: 100%;
-            max-width: 480px;
-            padding: 42px 36px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(217, 4, 41, 0.2);
-            backdrop-filter: blur(16px);
+            padding: 46px 36px;
             text-align: center;
+            position: relative;
         }
 
-        .btn-home {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--crimson), var(--flame));
-            border: none;
+        .error-code-badge {
+            font-family: var(--font-heading);
+            font-size: 5.5rem;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, #ff4d6d 0%, #dc2626 50%, #f97316 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(220, 38, 38, 0.4);
+            letter-spacing: -2px;
+        }
+
+        .error-icon-wrap {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.25) 0%, rgba(251, 146, 60, 0.2) 100%);
+            border: 1px solid rgba(220, 38, 38, 0.4);
+            border-radius: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.3);
+        }
+
+        .error-title {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            font-weight: 800;
             color: #fff;
-            font-size: 0.95rem;
-            font-weight: 700;
-            padding: 14px 28px;
-            border-radius: 14px;
-            cursor: pointer;
-            text-decoration: none;
-            box-shadow: 0 4px 16px rgba(217, 4, 41, 0.4);
-            transition: all 0.2s ease;
+            margin-bottom: 10px;
         }
 
-        .btn-home:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 24px rgba(217, 4, 41, 0.6);
+        .error-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 28px;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="nav-logo">CrimsonFlame<span>-Official</span></div>
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="dashboard.html">Dashboard</a>
-        </div>
+    <!-- Global Custom Crimson Loading Animation -->
+    <div id="page-loader">
+        <img src="/assets/loading.gif" alt="Loading..." class="loader-video">
+        <div class="loader-title">CrimsonFlame</div>
+    </div>
+    <script>
+        function hidePageLoader() {
+            var l = document.getElementById('page-loader');
+            if (l) {
+                l.classList.add('fade-out');
+                setTimeout(function() { l.style.display = 'none'; }, 400);
+            }
+        }
+        window.addEventListener('DOMContentLoaded', hidePageLoader);
+        window.addEventListener('load', hidePageLoader);
+        setTimeout(hidePageLoader, 1500);
+    </script>
+
+    <!-- Ambient Background Elements -->
+    <div class="bg-glow"></div>
+    <div class="bg-glow-2"></div>
+    <div class="particles" id="particles"></div>
+
+    <!-- Floating Navigation Pill -->
+    <nav class="pill-nav">
+        <a href="/index.html" class="pill-brand">
+            <img src="https://i.ibb.co/TBkJR2Jn/unnamed-removebg-preview.png" alt="CF" class="pill-brand-logo">
+            CrimsonFlame
+        </a>
+        <a href="/index.html" class="pill-link">Home</a>
+        <a href="/dashboard" class="pill-link">Dashboard</a>
+        <a href="/developer" class="pill-link">Developer</a>
+        <a href="/support" class="pill-link">Support</a>
     </nav>
 
     <main class="error-viewport">
         <div class="error-card">
-            <div style="font-size: 3.5rem; margin-bottom: 12px;">⚠️</div>
-            <h1 style="font-family: 'Outfit', sans-serif; font-size: 2.4rem; font-weight: 900; color: #fff; margin-bottom: 12px;">Uh Oh!</h1>
-            <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.6; margin-bottom: 28px;">
-                It seems there isnt a webpage here. Try again later.
+            <div class="error-icon-wrap">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="#f87171"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+            </div>
+            <div class="error-code-badge">404</div>
+            <h1 class="error-title">Lost in the Crimson Void</h1>
+            <p class="error-desc">
+                The coordinates you entered don't correspond to an active destination in the CrimsonFlame ecosystem.
             </p>
-            <a href="index.html" class="btn-home">Return Home →</a>
+            <div class="error-actions">
+                <a href="/index.html" class="btn-primary" style="padding: 12px 24px; text-decoration: none; font-weight: 800; font-size: 0.92rem;">
+                    ← Return Home
+                </a>
+                <a href="/dashboard" class="btn-secondary" style="padding: 12px 24px; text-decoration: none; font-weight: 700; font-size: 0.92rem; border-color: rgba(255,255,255,0.2);">
+                    CrimX Dashboard
+                </a>
+            </div>
         </div>
     </main>
 
+    <footer class="site-footer">
+        <p>© 2026 <strong>CrimsonFlame</strong>. All rights reserved.</p>
+    </footer>
+
+    <!-- Floating particles script -->
+    <script>
+        (function() {
+            var c = document.getElementById('particles');
+            if (!c) return;
+            for (var i = 0; i < 25; i++) {
+                var p = document.createElement('div');
+                p.className = 'particle';
+                var s = Math.random() * 3 + 1;
+                p.style.width = s + 'px';
+                p.style.height = s + 'px';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = Math.random() * 100 + '%';
+                p.style.animationDuration = (Math.random() * 12 + 8) + 's';
+                p.style.animationDelay = (Math.random() * 8) + 's';
+                p.style.opacity = Math.random() * 0.4 + 0.1;
+                c.appendChild(p);
+            }
+        })();
+    </script>
 </body>
 </html>

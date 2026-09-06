@@ -54,160 +54,484 @@
         
         <!-- Login View -->
         <div id="login-container" class="dash-card" style="max-width: 460px; margin: 40px auto;">
-            <h2>Account Login</h2>
-            <form onsubmit="submitLogin(event)">
-                <label>Email</label>
-                <input type="email" id="email" placeholder="you@example.com" required>
-                <label>Password</label>
-                <input type="password" id="password" placeholder="••••••••" required>
-                <button type="submit" class="btn-primary">Sign In</button>
-            </form>
-            <hr class="divider">
-            <button type="button" class="btn-google-sign-in" onclick="loginWithGoogle(event)">
-                <img src="https://cdn-icons-png.flaticon.com/512/300/300221.png" alt="G"> Continue with Google
-            </button>
-            <p style="text-align:center; margin-top: 14px; font-size: 0.88rem; color: var(--text-secondary);">
-                Don't have an account? <a id="toggle-auth" onclick="toggleLoginMode()" style="cursor: pointer; color: var(--crimson-light); font-weight: 600;">Register</a>
-            </p>
+            <div id="login-form-wrapper">
+                <h2 id="auth-title">Sign into CrimX</h2>
+                <form onsubmit="submitLogin(event)">
+                    <label>Email</label>
+                    <input type="email" id="email" placeholder="you@example.com" required>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+                        <label style="margin: 0;">Password</label>
+                        <a href="javascript:void(0)" onclick="toggleForgotPasswordView(true)" style="font-size: 0.8rem; color: var(--crimson-light); text-decoration: none; font-weight: 600; cursor: pointer;">Forgot Password?</a>
+                    </div>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                    <button type="submit" class="btn-primary">Sign In</button>
+                </form>
+                <hr class="divider">
+                <button type="button" class="btn-google-sign-in" onclick="loginWithGoogle(event)">
+                    <img src="https://cdn-icons-png.flaticon.com/512/300/300221.png" alt="G"> Continue with Google
+                </button>
+                <p style="text-align:center; margin-top: 14px; font-size: 0.88rem; color: var(--text-secondary);">
+                    Don't have an account? <a id="toggle-auth" onclick="toggleLoginMode()" style="cursor: pointer; color: var(--crimson-light); font-weight: 600;">Register</a>
+                </p>
+            </div>
+
+            <!-- Forgot Password Flow (Inside Login Box) -->
+            <div id="forgot-password-wrapper" style="display: none;">
+                <h2>Reset Password</h2>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 16px; line-height: 1.5;">
+                    Enter your CrimX account email to receive a secure password reset link.
+                </p>
+                <form onsubmit="submitForgotPasswordFromLogin(event)">
+                    <label>Account Email</label>
+                    <input type="email" id="forgot-password-email" placeholder="you@example.com" required style="margin-bottom: 12px;">
+                    <div id="forgot-feedback" style="display: none; font-size: 0.82rem; margin-bottom: 14px; padding: 10px 14px; border-radius: 8px;"></div>
+                    <button type="submit" id="forgot-submit-btn" class="btn-primary" style="margin-bottom: 10px; width: 100%;">
+                        Send Reset Link
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="toggleForgotPasswordView(false)" style="width: 100%; font-size: 0.85rem; font-weight: 700;">
+                        ← Back to Sign In
+                    </button>
+                </form>
+            </div>
         </div>
 
-        <!-- Dashboard Blocks View -->
-        <div id="dashboard-container" style="display: none;">
-            <h1 style="font-family: 'Outfit', sans-serif; font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 24px; text-align: left;">
-                User Settings
-            </h1>
-
-            <div class="dashboard-grid-layout" style="display: grid; grid-template-columns: 320px 1fr; gap: 24px; text-align: left; align-items: start; margin-bottom: 32px;">
-                
-                <!-- Left Column: Profile Card + Discord Block + Connected Apps Block Underneath -->
-                <div style="display: flex; flex-direction: column; gap: 24px;">
-                    
-                    <!-- Left Block 1: Profile Badge Card -->
-                    <div class="dash-card" style="padding: 32px 20px; text-align: center; margin-bottom: 0;">
-                        <img id="dashboard-pfp-preview" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" style="width: 96px; height: 96px; border-radius: 50%; object-fit: cover; border: 3px solid var(--crimson); margin-bottom: 16px; box-shadow: 0 8px 20px rgba(217, 4, 41, 0.3);">
-                        <h3 id="user-sidebar-name" style="font-family: 'Outfit', sans-serif; font-size: 1.3rem; font-weight: 800; color: #fff; margin-bottom: 4px;">Loading...</h3>
-                        <p id="user-display-email" style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 14px; word-break: break-all;"></p>
-                        <span style="display: inline-block; padding: 4px 14px; background: rgba(217,4,41,0.18); border: 1px solid rgba(217,4,41,0.4); color: var(--crimson-light); border-radius: 20px; font-size: 0.78rem; font-weight: 700; margin-bottom: 24px;">
-                            🔥 CrimsonFlame Member
-                        </span>
-                        <button class="btn-danger" onclick="logOutUser()" style="width: 100%;">Sign Out</button>
-                    </div>
-
-                    <!-- Left Block 2: Discord Integration -->
-                    <div class="dash-card" style="margin-bottom: 0;">
-                        <div class="section-header" style="color: #5865F2; margin-bottom: 12px;">
-                            <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" style="width: 20px;"> 
-                            <h3 style="margin: 0; font-family: 'Outfit', sans-serif;">Discord Integration</h3>
-                        </div>
-                        
-                        <div id="discord-unlinked" style="display: none;">
-                            <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 14px; line-height: 1.5;">Link your Discord account via bot to sync data.</p>
-                            <button class="btn-secondary" onclick="generateDiscordLinkCode()" style="background: #5865F2; color: white; border-color: #5865F2; width: 100%;">Generate Link Code</button>
-                            <p id="discord-link-code-display" style="display: none; text-align: center; font-size: 1.1rem; font-family: monospace; background: rgba(12,6,8,0.6); padding: 12px; border-radius: 8px; color: #4ade80; border: 1px dashed #5865F2; margin-top: 10px;"></p>
-                        </div>
-                        
-                        <div id="discord-linked" class="linked-card" style="display: none;">
-                            <img id="discord-avatar" src="" style="border: 2px solid #5865F2; width: 38px; height: 38px; border-radius: 50%;">
-                            <div style="flex: 1;">
-                                <div class="linked-label">Linked Account</div>
-                                <div id="discord-username" class="linked-name"></div>
-                            </div>
-                            <button class="btn-danger" style="width: auto; padding: 6px 12px; font-size: 0.8rem;" onclick="unlinkDiscord()">Unlink</button>
-                        </div>
-                    </div>
-
-                    <!-- Left Block 3: Connected Apps & Services (Under Discord) -->
-                    <div class="dash-card" style="margin-bottom: 0;">
-                        <div class="section-header" style="color: #60a5fa; margin-bottom: 12px;">
-                            <img src="https://cdn-icons-png.flaticon.com/512/1006/1006771.png" style="filter: invert(1); width: 20px;"> 
-                            <h3 style="margin: 0; font-family: 'Outfit', sans-serif;">Connected CrimX Applications</h3>
-                        </div>
-                        <p style="color: var(--text-secondary); font-size: 0.86rem; margin-bottom: 16px; line-height: 1.5;">
-                            External applications and games authorized via <strong>CrimX Auth</strong>.
-                        </p>
-
-                        <div id="connected-apps-list" style="display: flex; flex-direction: column; gap: 10px;">
-                            <p id="connected-apps-empty" style="color: var(--text-secondary); font-size: 0.85rem; text-align: center; padding: 16px; background: rgba(0,0,0,0.3); border-radius: 10px; border: 1px dashed rgba(255,255,255,0.1);">
-                                No connected applications yet.
-                            </p>
-                        </div>
-                    </div>
-
+        <!-- Settings Studio Overhaul Container -->
+        <div id="dashboard-container" class="settings-shell" style="display: none;">
+            
+            <!-- Settings Header -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
+                <h1 style="font-family: 'Outfit', sans-serif; font-size: 2.2rem; font-weight: 800; color: #fff; margin: 0; text-align: left;">
+                    CrimX Settings
+                </h1>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <a href="/developer" class="btn-secondary" style="display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; font-size: 0.85rem; font-weight: 700; text-decoration: none; border-color: rgba(255,255,255,0.15);">
+                        🛠️ Developer Portal
+                    </a>
+                    <button class="btn-danger" onclick="logOutUser()" style="width: auto; padding: 9px 18px; font-size: 0.85rem; font-weight: 700;">
+                        Sign Out
+                    </button>
                 </div>
+            </div>
 
-                <!-- Right Column: Profile Settings & Meta Quest VR -->
-                <div style="display: flex; flex-direction: column; gap: 24px;">
+            <!-- Settings 3-Column Layout: Navigation | Active Panel | Live Preview -->
+            <div class="settings-layout">
+                
+                <!-- Col 1: Sidebar Navigation -->
+                <aside class="settings-sidebar">
+                    <div class="settings-user-summary">
+                        <img id="sidebar-user-avatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="User Avatar">
+                        <div style="overflow: hidden; text-align: left;">
+                            <div id="sidebar-user-name" style="font-weight: 800; color: #fff; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Loading...</div>
+                            <div id="sidebar-user-handle" style="font-size: 0.78rem; color: var(--text-secondary); font-family: monospace;">@username</div>
+                            <div id="sidebar-role-badge" class="settings-role-badge">🔥 Member</div>
+                        </div>
+                    </div>
+
+                    <nav class="settings-nav">
+                        <button class="settings-nav-item active" onclick="switchSettingsTab('profile', this)">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            <span>Profile & Identity</span>
+                        </button>
+
+                        <button class="settings-nav-item" onclick="switchSettingsTab('security', this)">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+                            <span>Account & Security</span>
+                        </button>
+
+                        <button class="settings-nav-item" onclick="switchSettingsTab('integrations', this)">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+                            <span>Gaming Integrations</span>
+                        </button>
+
+                        <button class="settings-nav-item" onclick="switchSettingsTab('apps', this)">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
+                            <span>Connected Apps</span>
+                        </button>
+
+                        <button class="settings-nav-item" onclick="switchSettingsTab('preferences', this)">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                            <span>Preferences</span>
+                        </button>
+
+                        <div class="settings-nav-divider"></div>
+
+                        <button class="settings-nav-item" style="color: #ef4444;" onclick="switchSettingsTab('danger', this)">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            <span>Danger Zone</span>
+                        </button>
+                    </nav>
+                </aside>
+
+                <!-- Col 2: Active Tab Panel -->
+                <main class="settings-panel">
                     
-                    <!-- Right Block 1: Profile Settings -->
-                    <div class="dash-card" style="margin-bottom: 0;">
-                        <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 700; color: #fff; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-                            👤 Profile Settings
-                        </h3>
+                    <!-- TAB 1: Profile & Identity -->
+                    <div id="tab-profile" class="settings-tab-pane active">
+                        <div class="settings-tab-header">
+                            <h2>Profile & Identity</h2>
+                            <p>Customize how you appear across CrimsonFlame games, VR servers, and communities.</p>
+                        </div>
+
                         <form onsubmit="submitProfile(event)">
-                            <div id="pfp-drop-zone" class="drop-zone" onclick="document.getElementById('pfp-file-input').click()" style="margin-bottom: 14px; padding: 14px;">
-                                <span style="font-size: 0.82rem;">Click or drop image to change avatar</span>
-                                <input type="file" id="pfp-file-input" accept="image/*" style="display:none;" onchange="handleUpload(event.target.files[0], 'pfp')">
+                            
+                            <!-- Banner Customizer -->
+                            <div class="settings-section-block">
+                                <div class="settings-section-title">
+                                    <span>🎨 Profile Banner</span>
+                                </div>
+                                <div id="banner-uploader-box" class="banner-uploader-box" onclick="document.getElementById('banner-file-input').click()">
+                                    <img id="banner-preview-img" class="banner-preview-img" src="" style="display: none;" alt="Banner Preview">
+                                    <div class="banner-uploader-overlay">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                                        <span>Click to upload custom banner</span>
+                                    </div>
+                                    <input type="file" id="banner-file-input" accept="image/*" style="display:none;" onchange="handleUpload(event.target.files[0], 'banner')">
+                                </div>
+                                
+                                <div style="font-size: 0.76rem; color: var(--text-secondary); margin-bottom: 6px;">Or choose a CrimsonFlame preset theme:</div>
+                                <div class="preset-banner-grid">
+                                    <div class="preset-banner-thumb active" style="background: linear-gradient(135deg, #2b0d18 0%, #dc2626 50%, #15090f 100%);" onclick="selectPresetBanner('linear-gradient(135deg, #2b0d18 0%, #dc2626 50%, #15090f 100%)')"></div>
+                                    <div class="preset-banner-thumb" style="background: linear-gradient(135deg, #091e3a 0%, #2563eb 50%, #030a14 100%);" onclick="selectPresetBanner('linear-gradient(135deg, #091e3a 0%, #2563eb 50%, #030a14 100%)')"></div>
+                                    <div class="preset-banner-thumb" style="background: linear-gradient(135deg, #132a13 0%, #16a34a 50%, #051006 100%);" onclick="selectPresetBanner('linear-gradient(135deg, #132a13 0%, #16a34a 50%, #051006 100%)')"></div>
+                                    <div class="preset-banner-thumb" style="background: linear-gradient(135deg, #2e1065 0%, #9333ea 50%, #0f041d 100%);" onclick="selectPresetBanner('linear-gradient(135deg, #2e1065 0%, #9333ea 50%, #0f041d 100%)')"></div>
+                                </div>
                             </div>
-                            <div id="upload-status" class="status-text"></div>
 
-                            <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary);">Display Name</label>
-                            <input type="text" id="display-name" placeholder="Seen by other players" style="margin-bottom: 14px;">
+                            <!-- Avatar & Names -->
+                            <div class="settings-section-block">
+                                <div class="settings-section-title">
+                                    <span>👤 Avatar & Names</span>
+                                </div>
+                                
+                                <div class="avatar-edit-cluster">
+                                    <div class="avatar-edit-box" onclick="document.getElementById('pfp-file-input').click()">
+                                        <img id="dashboard-pfp-preview" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Avatar">
+                                        <input type="file" id="pfp-file-input" accept="image/*" style="display:none;" onchange="handleUpload(event.target.files[0], 'pfp')">
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <button type="button" class="btn-secondary" onclick="document.getElementById('pfp-file-input').click()" style="padding: 7px 14px; font-size: 0.82rem; font-weight: 700; width: auto; margin-bottom: 4px;">
+                                            Upload Avatar
+                                        </button>
+                                        <div style="font-size: 0.76rem; color: var(--text-secondary);">PNG, JPG, or GIF up to 5MB.</div>
+                                        <div id="upload-status" class="status-text"></div>
+                                    </div>
+                                </div>
 
-                            <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary);">Username</label>
-                            <input type="text" id="username-input" placeholder="username" style="font-family: monospace; margin-bottom: 18px;">
+                                <div class="form-group-row">
+                                    <div>
+                                        <div class="form-label">
+                                            <span>Display Name</span>
+                                            <span class="char-count" id="display-name-count">0/32</span>
+                                        </div>
+                                        <input type="text" id="display-name" class="settings-input" placeholder="Display Name" maxlength="32" oninput="updateLivePreview()">
+                                    </div>
+                                    <div>
+                                        <div class="form-label">
+                                            <span>Unique Username</span>
+                                            <span style="font-size: 0.72rem; color: var(--crimson-light);">Cooldown 30d</span>
+                                        </div>
+                                        <input type="text" id="username-input" class="settings-input" placeholder="username" style="font-family: monospace;" maxlength="24" oninput="updateLivePreview()">
+                                    </div>
+                                </div>
 
-                            <button type="submit" class="btn-primary" style="padding: 12px; font-weight: 700;">Save Changes</button>
+                                <div style="margin-bottom: 14px;">
+                                    <div class="form-label">
+                                        <span>Status / Custom Tagline</span>
+                                        <span class="char-count" id="status-text-count">0/60</span>
+                                    </div>
+                                    <input type="text" id="status-text-input" class="settings-input" placeholder="e.g., Testing VR Locomotion Lab" maxlength="60" oninput="updateLivePreview()">
+                                </div>
+
+                                <div>
+                                    <div class="form-label">
+                                        <span>About Me (Bio)</span>
+                                        <span class="char-count" id="bio-count">0/160</span>
+                                    </div>
+                                    <textarea id="bio-input" class="settings-textarea" placeholder="Tell the CrimsonFlame community about yourself..." maxlength="160" oninput="updateLivePreview()"></textarea>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-primary" style="padding: 13px 28px; font-weight: 800; font-size: 0.95rem; width: auto;">
+                                💾 Save Profile Changes
+                            </button>
                         </form>
                     </div>
 
-                    <!-- Right Block 2: Meta Quest VR -->
-                    <div class="dash-card" style="margin-bottom: 0;">
-                        <div class="section-header" style="color: #4ade80; margin-bottom: 12px;">
-                            <img src="https://cdn-icons-png.flaticon.com/512/806/806008.png" style="filter: invert(1); width: 20px;"> 
-                            <h3 style="margin: 0; font-family: 'Outfit', sans-serif;">Meta Quest VR</h3>
+                    <!-- TAB 2: Account & Security -->
+                    <div id="tab-security" class="settings-tab-pane">
+                        <div class="settings-tab-header">
+                            <h2>Account & Security</h2>
+                            <p>Protect your universal identity and manage authentication credentials.</p>
                         </div>
-                        
-                        <div id="vr-unlinked">
-                            <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 14px; line-height: 1.5;">Enter 6-digit code from Crimson Protocol to link VR inventory.</p>
-                            <form onsubmit="window.submitVRLinkCode(event)" style="display: flex; gap: 10px;">
-                                <input type="text" id="vr-link-input" placeholder="000000" maxlength="6" style="flex: 1; font-family: monospace; font-size: 1.1rem; text-align: center; letter-spacing: 4px;">
-                                <button type="submit" class="btn-primary" style="width: auto; margin-top: 0; background: #4ade80; color: #000; font-weight: 700; padding: 8px 16px;">Link</button>
+
+                        <!-- CrimX Universal ID Card -->
+                        <div class="settings-section-block">
+                            <div class="settings-section-title">
+                                <span>🛡️ Universal CrimX Identity</span>
+                            </div>
+                            <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 12px;">Your permanent player identifier across the CrimsonFlame ecosystem.</p>
+                            <div style="display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.4); padding: 12px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);">
+                                <div style="font-family: monospace; font-size: 0.9rem; color: #fff; flex: 1; word-break: break-all;" id="security-uid-display">Loading UID...</div>
+                                <button type="button" class="btn-secondary" onclick="copyCrimXUID()" style="width: auto; padding: 6px 14px; font-size: 0.78rem; font-weight: 700;">
+                                    Copy UID
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Email Status -->
+                        <div class="settings-section-block">
+                            <div class="settings-section-title">
+                                <span>📧 Email Verification</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                                <div>
+                                    <div style="font-weight: 700; color: #fff; font-size: 0.92rem;" id="security-email-display">user@example.com</div>
+                                    <div id="security-email-badge" style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.76rem; color: #4ade80; margin-top: 4px;">
+                                        ✓ Verified Account
+                                    </div>
+                                </div>
+                                <button id="resend-verification-btn" type="button" class="btn-secondary" onclick="sendVerificationEmailAgain()" style="display: none; width: auto; padding: 7px 16px; font-size: 0.82rem;">
+                                    Resend Verification Link
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Password Management -->
+                        <div class="settings-section-block">
+                            <div class="settings-section-title">
+                                <span>🔑 Password & Credentials</span>
+                            </div>
+                            
+                            <!-- Direct In-Page Change Form -->
+                            <form id="direct-password-form" onsubmit="submitDirectPasswordChange(event)" style="margin-bottom: 20px;">
+                                <div style="display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 14px;">
+                                    <div>
+                                        <label class="form-label">Current Password</label>
+                                        <input type="password" id="current-password-input" class="settings-input" placeholder="••••••••" required autocomplete="current-password">
+                                    </div>
+                                    <div class="form-group-row" style="margin-bottom: 0;">
+                                        <div>
+                                            <label class="form-label">New Password</label>
+                                            <input type="password" id="new-password-input" class="settings-input" placeholder="Min. 6 characters" required minlength="6" autocomplete="new-password">
+                                        </div>
+                                        <div>
+                                            <label class="form-label">Confirm New Password</label>
+                                            <input type="password" id="confirm-new-password-input" class="settings-input" placeholder="Repeat new password" required minlength="6" autocomplete="new-password">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn-primary" style="width: auto; padding: 10px 22px; font-weight: 700; font-size: 0.88rem;">
+                                    Update Password
+                                </button>
                             </form>
-                        </div>
 
-                        <div id="vr-linked" class="linked-card" style="display: none;">
-                            <div style="width: 38px; height: 38px; border-radius: 50%; background: #4ade80; display: flex; align-items: center; justify-content: center;">
-                                <img src="https://cdn-icons-png.flaticon.com/512/806/806008.png" style="width: 18px; filter: invert(1);">
-                            </div>
-                            <div>
-                                <div class="linked-label">PlayFab Linked</div>
-                                <div id="vr-playfab-id" class="linked-name" style="font-family: monospace;"></div>
+                            <div style="border-top: 1px solid rgba(255, 255, 255, 0.06); padding-top: 14px;">
+                                <p style="color: var(--text-secondary); font-size: 0.84rem; margin-bottom: 12px;">Forgot your current password? We can send a secure reset link to your email.</p>
+                                <button type="button" class="btn-secondary" onclick="triggerPasswordReset()" style="width: auto; padding: 8px 18px; font-weight: 700; font-size: 0.84rem; border-color: rgba(255, 255, 255, 0.15);">
+                                    Send Password Reset Email
+                                </button>
                             </div>
                         </div>
                     </div>
 
-                </div>
-            </div>
-
-            <!-- Bottom Block (Very Bottom of Page): Developer Portal -->
-            <div class="dash-card" style="width: 100%; margin-top: 12px; border: 1px solid rgba(217, 4, 41, 0.3); background: rgba(22, 12, 16, 0.85); text-align: left;">
-                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
-                    <div>
-                        <div class="section-header" style="color: var(--crimson-light); margin-bottom: 6px;">
-                            <img src="https://cdn-icons-png.flaticon.com/512/3064/3064155.png" style="filter: invert(1); width: 22px;"> 
-                            <h3 style="margin: 0; font-family: 'Outfit', sans-serif; font-size: 1.4rem; font-weight: 800; color: #fff;">Developer Portal</h3>
+                    <!-- TAB 3: Gaming Integrations -->
+                    <div id="tab-integrations" class="settings-tab-pane">
+                        <div class="settings-tab-header">
+                            <h2>Gaming Integrations</h2>
+                            <p>Link your external gaming profiles to sync achievements, inventories, and community ranks.</p>
                         </div>
-                        <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; max-width: 650px; margin: 0;">
-                            Are you a developer? Create and manage <strong>Single Sign-On (SSO) Link Keys</strong> for your external applications, games, and web services.
-                        </p>
+
+                        <!-- Discord Integration -->
+                        <div class="settings-section-block">
+                            <div class="section-header" style="color: #5865F2; margin-bottom: 12px;">
+                                <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" style="width: 22px;"> 
+                                <h3 style="margin: 0; font-family: var(--font-heading); font-size: 1.1rem; color: #fff;">Discord Integration</h3>
+                            </div>
+                            
+                            <div id="discord-unlinked" style="display: none;">
+                                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 14px; line-height: 1.5;">Link your Discord account via the official CrimsonFlame Bot to sync server roles and verify membership.</p>
+                                <button class="btn-secondary" onclick="generateDiscordLinkCode()" style="background: #5865F2; color: white; border-color: #5865F2; width: auto; padding: 10px 22px; font-weight: 700;">
+                                    Generate Link Code
+                                </button>
+                                <p id="discord-link-code-display" style="display: none; text-align: center; font-size: 1.1rem; font-family: monospace; background: rgba(12,6,8,0.6); padding: 12px; border-radius: 8px; color: #4ade80; border: 1px dashed #5865F2; margin-top: 12px;"></p>
+                            </div>
+                            
+                            <div id="discord-linked" class="linked-card" style="display: none;">
+                                <img id="discord-avatar" src="" style="border: 2px solid #5865F2; width: 44px; height: 44px; border-radius: 50%;">
+                                <div style="flex: 1;">
+                                    <div class="linked-label">Linked Discord Account</div>
+                                    <div id="discord-username" class="linked-name" style="font-size: 1rem;"></div>
+                                </div>
+                                <button class="btn-danger" style="width: auto; padding: 6px 14px; font-size: 0.8rem;" onclick="unlinkDiscord()">Unlink</button>
+                            </div>
+                        </div>
                     </div>
-                    <a href="/developer" class="btn-primary" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; padding: 14px 28px; font-weight: 800; font-size: 0.95rem; background: var(--crimson); white-space: nowrap;">
-                        🛠️ Open Developer Dashboard →
-                    </a>
-                </div>
+
+                    <!-- TAB 4: Connected Applications -->
+                    <div id="tab-apps" class="settings-tab-pane">
+                        <div class="settings-tab-header">
+                            <h2>Connected Applications</h2>
+                            <p>Third-party games, services, and developer applications authorized via <strong>CrimX Auth</strong>.</p>
+                        </div>
+
+                        <div class="settings-section-block">
+                            <div class="settings-section-title">
+                                <span>Authorized Games & Services</span>
+                            </div>
+                            <div id="connected-apps-list" style="display: flex; flex-direction: column; gap: 12px;">
+                                <p id="connected-apps-empty" style="color: var(--text-secondary); font-size: 0.85rem; text-align: center; padding: 24px; background: rgba(0,0,0,0.3); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.1);">
+                                    No external applications have been authorized yet.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="settings-section-block" style="border-color: rgba(220, 38, 38, 0.3); background: rgba(22, 12, 16, 0.6);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+                                <div>
+                                    <div style="font-weight: 800; color: #fff; font-size: 1rem; margin-bottom: 4px;">Building your own game or app?</div>
+                                    <div style="color: var(--text-secondary); font-size: 0.85rem;">Create Client IDs and integration keys using the Developer Portal.</div>
+                                </div>
+                                <a href="/developer" class="btn-primary" style="width: auto; padding: 9px 20px; font-size: 0.85rem; font-weight: 700; text-decoration: none;">
+                                    Launch Developer Portal →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 5: Preferences & Audio -->
+                    <div id="tab-preferences" class="settings-tab-pane">
+                        <div class="settings-tab-header">
+                            <h2>Preferences & Audio</h2>
+                            <p>Customize your sound effects, beta testing access, and notification settings.</p>
+                        </div>
+
+                        <div class="settings-section-block">
+                            <div class="toggle-row">
+                                <div class="toggle-info">
+                                    <h4>Audio Feedback & SFX</h4>
+                                    <p>Play subtle audio cues when saving settings, clicking tabs, or copying keys.</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="pref-sfx" checked onchange="savePreferences()">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-row">
+                                <div class="toggle-info">
+                                    <h4>CrimsonFlame VR Beta Program</h4>
+                                    <p>Opt-in to experimental builds, locomotion playtests, and preview VR servers.</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="pref-beta" onchange="savePreferences()">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-row">
+                                <div class="toggle-info">
+                                    <h4>Studio Updates & Newsletters</h4>
+                                    <p>Receive occasional email alerts regarding major game updates and events.</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="pref-email-updates" checked onchange="savePreferences()">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 6: Danger Zone -->
+                    <div id="tab-danger" class="settings-tab-pane">
+                        <div class="settings-tab-header">
+                            <h2 style="color: #ef4444;">Danger Zone</h2>
+                            <p>Manage account security session termination and data removal.</p>
+                        </div>
+
+                        <div class="settings-section-block" style="border-color: rgba(239, 68, 68, 0.3); background: rgba(30, 10, 14, 0.4);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+                                <div>
+                                    <div style="font-weight: 800; color: #fff; font-size: 0.95rem; margin-bottom: 4px;">Sign Out of All Sessions</div>
+                                    <div style="color: var(--text-secondary); font-size: 0.85rem;">Ends your active session on this device and revokes temporary local tokens.</div>
+                                </div>
+                                <button type="button" class="btn-danger" onclick="logOutUser()" style="width: auto; padding: 10px 22px; font-weight: 700;">
+                                    Sign Out Now
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="settings-section-block" style="border-color: rgba(239, 68, 68, 0.3); background: rgba(30, 10, 14, 0.4);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+                                <div>
+                                    <div style="font-weight: 800; color: #ef4444; font-size: 0.95rem; margin-bottom: 4px;">Delete CrimsonFlame Account</div>
+                                    <div style="color: var(--text-secondary); font-size: 0.85rem;">Permanently deletes your player profile, cloud inventories, and developer credentials.</div>
+                                </div>
+                                <button type="button" class="btn-danger" onclick="confirmDeleteAccount()" style="width: auto; padding: 10px 22px; font-weight: 700; background: #b91c1c;">
+                                    Delete Account
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </main>
+
+                <!-- Col 3: Live Real-Time Gamer Profile Preview Card -->
+                <aside class="settings-preview-col">
+                    <div style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.8px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+                        <span>● Live Profile Preview</span>
+                    </div>
+
+                    <div class="profile-card-preview">
+                        <!-- Preview Header Banner -->
+                        <div id="preview-banner" class="preview-card-header">
+                            <div class="preview-card-avatar-wrap">
+                                <img id="preview-avatar" class="preview-card-avatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Preview Avatar">
+                                <div class="preview-status-indicator" title="Online"></div>
+                            </div>
+                        </div>
+
+                        <!-- Preview Card Body -->
+                        <div class="preview-card-body">
+                            <div id="preview-name" class="preview-card-name">Player Name</div>
+                            <div id="preview-handle" class="preview-card-handle">@username</div>
+                            
+                            <div id="preview-role-container" style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px;">
+                                <div id="preview-staff-badge" class="preview-staff-badge" style="display: none; margin-bottom: 0;">
+                                    🛡️ CrimsonFlame Staff
+                                </div>
+                                <div id="preview-dev-badge" class="preview-dev-badge" style="display: none; margin-bottom: 0;">
+                                    🛠️ Developer
+                                </div>
+                                <div id="preview-member-badge" class="preview-card-badge" style="margin-bottom: 0;">
+                                    🔥 CrimsonFlame Member
+                                </div>
+                            </div>
+
+                            <div id="preview-status-box" class="preview-card-status-box">
+                                <span style="font-style: normal;">💬</span>
+                                <span id="preview-status-text">Exploring CrimsonFlame</span>
+                            </div>
+
+                            <div id="preview-bio" class="preview-card-bio">
+                                Welcome to my CrimsonFlame player profile!
+                            </div>
+
+                            <div class="preview-card-integrations">
+                                <div id="preview-discord-chip" class="preview-integration-chip">
+                                    <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" style="width: 14px;">
+                                    <span id="preview-discord-text">Discord: Unlinked</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
             </div>
 
         </div>
+
+        <!-- Floating Toast Container -->
+        <div id="toast-container"></div>
     </main>
 
     <div id="custom-alert" class="custom-modal-overlay">
