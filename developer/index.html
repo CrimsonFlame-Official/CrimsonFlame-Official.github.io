@@ -274,9 +274,11 @@ if (callback.success) {
         }
     })();
 
+    const currentOrigin = window.location.origin;
+
     const SNIPPETS = {
         js: `// 1. Include the CrimX SDK in your web app:
-import { CrimX } from "https://crimsonflame.net/crimx.js";
+import { CrimX } from "${currentOrigin}/crimx.js";
 
 // 2. Redirect player to CrimX Auth:
 const loginUrl = CrimX.getAuthUrl({
@@ -301,7 +303,7 @@ if (callback.success) {
   alert("In-Game Login Error: " + callback.errorDescription);
 }`,
         node: `// Node.js Backend Exchange Example:
-import { CrimX } from "https://crimsonflame.net/crimx.js"; // or import from ./crimx.js
+import { CrimX } from "${currentOrigin}/crimx.js"; // or import from ./crimx.js
 
 app.get('/callback', async (req, res) => {
   const { code, state, error } = req.query;
@@ -343,12 +345,15 @@ async def callback(code: str, state: str = None, error: str = None):
     return {"status": "authenticated", "player": session["user"]}`,
         curl: `# Exchange an authorization code:
 # Using the CrimX SDK or Firestore document lookup:
-curl -X POST "https://crimsonflame.net/auth/token" \\
+curl -X POST "${currentOrigin}/auth/token" \\
   -d "grant_type=authorization_code" \\
   -d "code=crimx_code_abc123" \\
   -d "client_id=YOUR_CLIENT_ID" \\
   -d "client_secret=YOUR_CLIENT_SECRET"`
     };
+
+    const activeSnippetEl = document.getElementById('active-code-snippet');
+    if (activeSnippetEl) activeSnippetEl.textContent = SNIPPETS.js;
 
     window.switchCodeTab = function(lang, btn) {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));

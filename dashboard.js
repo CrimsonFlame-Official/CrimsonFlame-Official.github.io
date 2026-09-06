@@ -300,9 +300,7 @@ window.copyCrimXUID = function() {
 window.triggerPasswordReset = async function() {
     if (!currentUser || !currentUser.email) return;
     try {
-        const resetUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-            ? 'https://crimsonflame.net/reset-password.html' 
-            : `${window.location.origin}/reset-password.html`;
+        const resetUrl = `${window.location.origin}/reset-password.html`;
         const actionCodeSettings = {
             url: resetUrl,
             handleCodeInApp: true
@@ -474,9 +472,7 @@ window.submitForgotPasswordFromLogin = async function(e) {
     if (feedback) feedback.style.display = 'none';
 
     try {
-        const resetUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-            ? 'https://crimsonflame.net/reset-password.html' 
-            : `${window.location.origin}/reset-password.html`;
+        const resetUrl = `${window.location.origin}/reset-password.html`;
         const actionCodeSettings = {
             url: resetUrl,
             handleCodeInApp: true

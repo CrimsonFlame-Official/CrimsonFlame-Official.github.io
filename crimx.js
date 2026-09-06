@@ -19,7 +19,10 @@ const DEFAULT_FIREBASE_CONFIG = {
 
 class CrimXSDK {
     constructor(config = {}) {
-        this.authBaseUrl = config.authBaseUrl || "https://crimsonflame.net/link";
+        const defaultOrigin = (typeof window !== 'undefined' && window.location && window.location.origin) 
+            ? window.location.origin 
+            : "https://crimsonongit-hub.github.io";
+        this.authBaseUrl = config.authBaseUrl || `${defaultOrigin}/link`;
         const fbConfig = config.firebaseConfig || DEFAULT_FIREBASE_CONFIG;
         
         this.app = getApps().length > 0 ? getApp() : initializeApp(fbConfig);
