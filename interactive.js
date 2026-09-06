@@ -2,156 +2,18 @@
 (function() {
     'use strict';
 
-    // ─── 1. SYNTHESIZED WEB AUDIO API SOUND SYSTEM ───
+    // ─── 1. SYNTHESIZED SOUND SYSTEM (DISABLED) ───
     const SFX = {
-        ctx: null,
-        muted: localStorage.getItem('cf_sfx_mute') === 'true',
-
-        init() {
-            if (!this.ctx) {
-                const AudioCtx = window.AudioContext || window.webkitAudioContext;
-                if (AudioCtx) this.ctx = new AudioCtx();
-            }
-            if (this.ctx && this.ctx.state === 'suspended') {
-                this.ctx.resume();
-            }
-        },
-
-        toggleMute() {
-            this.muted = !this.muted;
-            localStorage.setItem('cf_sfx_mute', this.muted);
-            return this.muted;
-        },
-
-        playFlap() {
-            if (this.muted) return;
-            this.init();
-            if (!this.ctx) return;
-            const now = this.ctx.currentTime;
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(260, now);
-            osc.frequency.exponentialRampToValueAtTime(640, now + 0.08);
-            gain.gain.setValueAtTime(0.22, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            osc.start(now);
-            osc.stop(now + 0.09);
-        },
-
-        playScore() {
-            if (this.muted) return;
-            this.init();
-            if (!this.ctx) return;
-            const now = this.ctx.currentTime;
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(523.25, now);
-            osc.frequency.setValueAtTime(659.25, now + 0.05);
-            osc.frequency.setValueAtTime(783.99, now + 0.10);
-            gain.gain.setValueAtTime(0.25, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.20);
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            osc.start(now);
-            osc.stop(now + 0.22);
-        },
-
-        playCrash() {
-            if (this.muted) return;
-            this.init();
-            if (!this.ctx) return;
-            const now = this.ctx.currentTime;
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(190, now);
-            osc.frequency.exponentialRampToValueAtTime(35, now + 0.32);
-            gain.gain.setValueAtTime(0.38, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.32);
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            osc.start(now);
-            osc.stop(now + 0.34);
-        },
-
-        playSpin() {
-            if (this.muted) return;
-            this.init();
-            if (!this.ctx) return;
-            const now = this.ctx.currentTime;
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(380, now);
-            osc.frequency.exponentialRampToValueAtTime(920, now + 0.16);
-            gain.gain.setValueAtTime(0.2, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            osc.start(now);
-            osc.stop(now + 0.2);
-        },
-
-        playShockwave() {
-            if (this.muted) return;
-            this.init();
-            if (!this.ctx) return;
-            const now = this.ctx.currentTime;
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(160, now);
-            osc.frequency.exponentialRampToValueAtTime(45, now + 0.4);
-            gain.gain.setValueAtTime(0.3, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            osc.start(now);
-            osc.stop(now + 0.42);
-        },
-
-        playChargeBlip(step) {
-            if (this.muted) return;
-            this.init();
-            if (!this.ctx) return;
-            const now = this.ctx.currentTime;
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            const freqs = [440, 523.25, 622.25, 739.99, 880, 1046.5];
-            const f = freqs[step] || 880;
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(f, now);
-            osc.frequency.exponentialRampToValueAtTime(f * 1.1, now + 0.07);
-            gain.gain.setValueAtTime(0.2, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.07);
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            osc.start(now);
-            osc.stop(now + 0.08);
-        },
-
-        playChargeFull() {
-            if (this.muted) return;
-            this.init();
-            if (!this.ctx) return;
-            const now = this.ctx.currentTime;
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(587.33, now);
-            osc.frequency.setValueAtTime(880, now + 0.06);
-            osc.frequency.setValueAtTime(1174.66, now + 0.12);
-            gain.gain.setValueAtTime(0.3, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.28);
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            osc.start(now);
-            osc.stop(now + 0.3);
-        }
+        muted: true,
+        init() {},
+        toggleMute() { return true; },
+        playFlap() {},
+        playScore() {},
+        playCrash() {},
+        playSpin() {},
+        playShockwave() {},
+        playChargeBlip() {},
+        playChargeFull() {}
     };
 
     // ─── 2. CLICK-TO-SPIN LOGO GIMMICK & COMBO ───
@@ -304,7 +166,6 @@
         const openBtn = document.getElementById('btn-open-flappy');
         const fabBtn = document.getElementById('arcade-fab');
         const closeBtn = document.getElementById('flappy-close-btn');
-        const soundBtn = document.getElementById('flappy-sound-btn');
         const bestScoreLabel = document.getElementById('flappy-best-score');
         const fabBestLabel = document.getElementById('arcade-fab-best');
 
@@ -320,20 +181,6 @@
             if (fabBestLabel) fabBestLabel.textContent = `BEST ${bestScore}`;
         }
         updateBestDisplays();
-
-        // Sound button icon sync
-        function updateSoundBtn() {
-            if (soundBtn) soundBtn.textContent = SFX.muted ? '🔇' : '🔊';
-        }
-        updateSoundBtn();
-
-        if (soundBtn) {
-            soundBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                SFX.toggleMute();
-                updateSoundBtn();
-            });
-        }
 
         // Game dimensions
         const WIDTH = 380;
