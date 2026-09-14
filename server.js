@@ -1,19 +1,12 @@
 const express = require('express');
 const path = require('path');
-let compression;
-try {
-  compression = require('compression');
-} catch (e) {
-  // Compression module optional
-}
+const compression = require('compression');
 const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 8085;
 
-if (compression) {
-  app.use(compression());
-}
+app.use(compression());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -91,7 +84,7 @@ const HTTP_STATUS_MAP = {
 };
 
 // ─── CRIMSONFLAME THEMED ERROR RENDERER ───
-function renderErrorHTML(statusCode, customTitle, customDesc, customIcon, showBackButton = true) {
+function renderErrorHTML(statusCode, customTitle, customDesc, customIcon) {
   const info = HTTP_STATUS_MAP[statusCode] || {
     title: `${statusCode}`,
     icon: "⚠️",
@@ -224,9 +217,9 @@ function renderErrorHTML(statusCode, customTitle, customDesc, customIcon, showBa
             ${showIcon ? `<div class="error-icon-indicator">${icon}</div>` : ''}
             <div class="error-code-badge">${codeDisplay}</div>
             <p class="error-desc">${desc}</p>
-            ${showBackButton && statusCode !== 418 ? `<div class="error-actions">
+            <div class="error-actions">
                 <a href="/index.html" class="btn-back">Back</a>
-            </div>` : ''}
+            </div>
         </div>
     </main>
 
@@ -444,20 +437,25 @@ app.use((req, res, next) => {
   const reqPath = req.path.toLowerCase();
 
   if (isCrimX) {
-    if (reqPath === '/' || reqPath === '/dashboard' || reqPath === '/dashboard/' || reqPath === '/dashboard/index.html' || reqPath === '/login' || reqPath === '/signin') {
-      return res.sendFile(path.join(__dirname, 'index.html'));
+    if (reqPath === '/' || reqPath === '/dashboard' || reqPath === '/dashboard/' || reqPath === '/dashboard/index.html') {
+      return res.sendFile(path.join(__dirname, 'dashboard', 'index.html'));
     }
     return next();
   }
 
-  // Normal website also has sign in: serve index.html on /dashboard, /login, and /signin
+  // Normal website also has sign in: serve dashboard/index.html on /dashboard, /login, and /signin
   if (reqPath === '/dashboard' || reqPath === '/dashboard/' || reqPath === '/dashboard/index.html' || reqPath === '/login' || reqPath === '/signin') {
-    return res.sendFile(path.join(__dirname, 'index.html'));
+    return res.sendFile(path.join(__dirname, 'dashboard', 'index.html'));
   }
 
   next();
 });
 
+
+// ─── 4.5 SPECIAL ERROR CODES ───
+app.get(['/teapot', '/teapot/*', '/418'], (req, res) => {
+  res.status(418).sendFile(path.join(__dirname, 'teapot', 'index.html'));
+});
 
 // ─── 5. STATIC ASSET SERVING ───
 app.use(express.static(__dirname, {
@@ -467,11 +465,15 @@ app.use(express.static(__dirname, {
 
 // ─── 6. DYNAMIC CLEAN URL ROUTING ───
 app.get('/', (req, res) => {
+  const host = (req.headers.host || '').toLowerCase();
+  if (host.startsWith('crimx.') || host.startsWith('crimx-')) {
+    return res.sendFile(path.join(__dirname, 'dashboard', 'index.html'));
+  }
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.get(['/crimx', '/crimx/*'], (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+app.get('/crimx', (req, res) => {
+  res.sendFile(path.join(__dirname, 'crimx', 'index.html'));
 });
 
 app.get('/projects', (req, res) => {
@@ -508,11 +510,6 @@ app.get(['/terms', '/tos'], (req, res) => {
 
 app.get('/privacy', (req, res) => {
   res.sendFile(path.join(__dirname, 'privacy', 'index.html'));
-});
-
-app.get(['/teapot', '/418'], (req, res) => {
-  const info = HTTP_STATUS_MAP[418];
-  res.status(418).send(renderErrorHTML(418, info.title, info.desc, info.icon, false));
 });
 
 // ─── API: CIM REALTIME IN-MEMORY RELAY & FIREBASE MESSAGING ───
@@ -672,9 +669,23 @@ app.post('/api/notifications/security-alert', (req, res) => {
   res.json({ success: true });
 });
 
+// ─── CRIMX PAGES DYNAMIC ROUTING (/:username and /:username/:pagename) ───
+const RESERVED_PREFIXES = new Set([
+  'dashboard', 'developer', 'projects', 'auth', 'terms', 'privacy',
+  'link', 'status', 'api', 'assets', 'teapot', 'crimx', 'pages', 'favicon.ico'
+]);
+
+app.get('/:username/:pagename?', (req, res, next) => {
+  const user = req.params.username.toLowerCase();
+  if (RESERVED_PREFIXES.has(user) || user.includes('.')) {
+    return next();
+  }
+  res.sendFile(path.join(__dirname, 'pages', 'index.html'));
+});
+
 // ─── 6. REAL HTTP 404 NOT FOUND HANDLER ───
 app.use((req, res) => {
-  res.status(404).send(renderErrorHTML(404));
+  res.status(404).sendFile(path.join(__dirname, '404.html'));
 });
 
 // ─── 7. REAL HTTP 500 INTERNAL SERVER ERROR HANDLER ───
@@ -684,7 +695,7 @@ app.use((err, req, res, next) => {
   res.status(500).send(renderErrorHTML(500, info.title, info.desc, info.icon));
 });
 
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, () => {
   console.log(`[CrimsonFlame Dynamic Server] Running live on port ${PORT}`);
   console.log(`- Status test route: http://localhost:${PORT}/status/403`);
   console.log(`- Protected route:   http://localhost:${PORT}/secret-folder`);

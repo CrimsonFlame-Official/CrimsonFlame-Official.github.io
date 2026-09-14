@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrimX | Account Dashboard</title>
+    <link rel="stylesheet" href="/style.css?v=12">
+    <script src="/theme.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        @media (max-width: 880px) {
+            .dashboard-grid-layout {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Global Custom Crimson Loading Animation -->
+    <div id="page-loader">
+        <img src="/assets/loading.gif" alt="Loading..." class="loader-video">
+        <div class="loader-title">CrimX</div>
+    </div>
+    <script>
+        function hidePageLoader() {
+            var l = document.getElementById('page-loader');
+            if (l) {
+                l.classList.add('fade-out');
+                setTimeout(function() { l.style.display = 'none'; }, 400);
+            }
+        }
+        window.addEventListener('DOMContentLoaded', hidePageLoader);
+        window.addEventListener('load', hidePageLoader);
+        setTimeout(hidePageLoader, 1500);
+    </script>
+
+    <div class="bg-glow"></div>
+    <div class="bg-glow-2"></div>
+    <div class="particles" id="particles"></div>
+    
+
+
+    <main class="dash-main" style="max-width: 1680px; width: 100%; margin: 0 auto; padding: 28px 32px 60px; box-sizing: border-box;">
+        
+        <!-- Login View -->
+        <div id="login-container" class="dash-card" style="max-width: 460px; margin: 40px auto;">
+            <div id="login-form-wrapper">
+                <h2 id="auth-title">Sign into CrimX</h2>
+                <form onsubmit="submitLogin(event)">
+                    <label>Email</label>
+                    <input type="email" id="email" placeholder="you@example.com" required>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+                        <label style="margin: 0;">Password</label>
+                        <a href="javascript:void(0)" onclick="toggleForgotPasswordView(true)" style="font-size: 0.8rem; color: var(--crimson-light); text-decoration: none; font-weight: 600; cursor: pointer;">Forgot Password?</a>
+                    </div>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                    <button type="submit" class="btn-primary">Sign In</button>
+                </form>
+                <hr class="divider">
+                <button type="button" class="btn-google-sign-in" onclick="loginWithGoogle(event)">
+                    <img src="https://cdn-icons-png.flaticon.com/512/300/300221.png" alt="G"> Continue with Google
+                </button>
+                <p style="text-align:center; margin-top: 14px; font-size: 0.88rem; color: var(--text-secondary);">
+                    Don't have an account? <a id="toggle-auth" onclick="toggleLoginMode()" style="cursor: pointer; color: var(--crimson-light); font-weight: 600;">Register</a>
+                </p>
+            </div>
+
+            <!-- Forgot Password Flow (Inside Login Box) -->
+            <div id="forgot-password-wrapper" style="display: none;">
+                <h2>Reset Password</h2>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 16px; line-height: 1.5;">
+                    Enter your CrimX account email to receive a secure password reset link.
+                </p>
+                <form onsubmit="submitForgotPasswordFromLogin(event)">
+                    <label>Account Email</label>
+                    <input type="email" id="forgot-password-email" placeholder="you@example.com" required style="margin-bottom: 12px;">
+                    <div id="forgot-feedback" style="display: none; font-size: 0.82rem; margin-bottom: 14px; padding: 10px 14px; border-radius: 8px;"></div>
+                    <button type="submit" id="forgot-submit-btn" class="btn-primary" style="margin-bottom: 10px; width: 100%;">
+                        Send Reset Link
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="toggleForgotPasswordView(false)" style="width: 100%; font-size: 0.85rem; font-weight: 700;">
+                        ← Back to Sign In
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Settings Studio & Dashboard Hub Container -->
+        <div id="dashboard-container" style="display: none;">
+            
+            <!-- Top Dashboard Navigation Glass Bar -->
+            <header class="dash-header-bar">
+                <div class="dash-header-left">
+                    <a href="https://crimsonflame.net/" class="crimx-back-btn" onclick="exitCrimX(event)">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                        <span>Back to Website</span>
+                    </a>
+                    <div class="dash-brand-capsule">
+                        <span class="dash-brand-dot"></span>
+                        <span>CrimX Dashboard</span>
+                    </div>
+                </div>
+                <div class="dash-header-right">
+                    <button type="button" class="btn-primary btn-aero-primary" onclick="toggleSettingsStudio(true)" style="padding: 8px 20px; font-size: 0.85rem; font-weight: 800;">
+                        ⚙️ Settings Studio
+                    </button>
+                </div>
+            </header>
+
+            <!-- 1. FULL-WIDTH PANORAMIC HERO PLAYER SHOWCASE CARD -->
+            <div class="dash-card-profile dash-hero-profile-card" id="cim-sidebar-profile">
+                <div class="dash-profile-banner cim-profile-banner" id="cim-profile-banner">
+                    <div class="dash-hero-banner-overlay"></div>
+                    <button type="button" class="dash-hero-edit-btn" onclick="toggleSettingsStudio(true)" title="Edit Profile & Avatar">
+                        ✏️ Edit Profile
+                    </button>
+                </div>
+                <div class="dash-profile-body dash-hero-profile-body">
+                    <div class="dash-hero-avatar-col">
+                        <div class="dash-profile-avatar-wrap cim-profile-avatar-wrap dash-hero-avatar-wrap" id="status-picker-avatar-trigger" style="cursor: pointer;" onclick="toggleStatusPicker(event)" title="Click to change status">
+                            <img id="cim-profile-pfp" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Avatar">
+                            <span class="cim-profile-dot" id="cim-profile-status-dot"></span>
+                        </div>
+                    </div>
+                    <div class="dash-hero-info-col">
+                        <div class="dash-profile-name-row cim-profile-name-row">
+                            <h2 id="cim-profile-name" class="cim-profile-name">Player</h2>
+                            <span class="cim-profile-badge" id="cim-profile-badge">🔥 Member</span>
+                            <span id="cim-profile-handle" class="dash-profile-handle-text cim-profile-handle">@user</span>
+                        </div>
+                        <div class="dash-hero-status-row" style="position: relative; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                            <div id="cim-profile-status" class="dash-profile-status-text cim-profile-status">Browsing the Website</div>
+                            <button type="button" class="btn-status-selector" id="status-picker-toggle-btn" onclick="toggleStatusPicker(event)" title="Click to change your presence status">
+                                <span class="status-badge-dot online" id="current-status-picker-dot"></span>
+                                <span id="current-status-picker-label">Online</span>
+                                <span style="font-size: 0.68rem; opacity: 0.7;">▾</span>
+                            </button>
+                            <!-- Status Picker Dropdown Menu -->
+                            <div class="status-picker-dropdown" id="status-picker-dropdown" style="display: none;">
+                                <div class="status-picker-option" id="opt-status-online" onclick="selectStatusMode('online')">
+                                    <div class="status-picker-icon-badge">
+                                        <span class="status-badge-dot online"></span>
+                                    </div>
+                                    <div class="status-picker-details">
+                                        <span class="status-picker-title">Online</span>
+                                        <span class="status-picker-desc">Active, responsive, & visible</span>
+                                    </div>
+                                </div>
+                                <div class="status-picker-option" id="opt-status-idle" onclick="selectStatusMode('idle')">
+                                    <div class="status-picker-icon-badge">🌙</div>
+                                    <div class="status-picker-details">
+                                        <span class="status-picker-title">Idle</span>
+                                        <span class="status-picker-desc">I can see messages, but prob won't respond</span>
+                                    </div>
+                                </div>
+                                <div class="status-picker-option" id="opt-status-afk" onclick="selectStatusMode('afk')">
+                                    <div class="status-picker-icon-badge">⌨️</div>
+                                    <div class="status-picker-details">
+                                        <span class="status-picker-title">AFK</span>
+                                        <span class="status-picker-desc">Away from keyboard</span>
+                                    </div>
+                                </div>
+                                <div class="status-picker-option" id="opt-status-dnd" onclick="selectStatusMode('dnd')">
+                                    <div class="status-picker-icon-badge">⛔</div>
+                                    <div class="status-picker-details">
+                                        <span class="status-picker-title">Do Not Disturb</span>
+                                        <span class="status-picker-desc">Mutes incoming message chimes & alerts</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="hero-current-game-container" style="display: none;"></div>
+                        <div id="cim-profile-bio" class="dash-profile-bio-text cim-profile-bio">The developer behind it all 👓</div>
+                        <div id="cim-profile-socials" class="cim-profile-socials"></div>
+                    </div>
+                    <div class="dash-hero-stats-col">
+                        <div class="dash-hero-stat-card">
+                            <span class="stat-num" id="hero-user-number" style="color: #f97316;">#1</span>
+                            <span class="stat-label">User ID</span>
+                        </div>
+                        <div class="dash-hero-stat-card">
+                            <span class="stat-num" id="hero-friends-stat">0</span>
+                            <span class="stat-label">Friends</span>
+                        </div>
+                        <div class="dash-hero-stat-card">
+                            <span class="stat-num" id="hero-apps-stat">0</span>
+                            <span class="stat-label">Apps Linked</span>
+                        </div>
+                        <div class="dash-hero-stat-card">
+                            <span class="stat-num" style="color: #22c55e;">✓</span>
+                            <span class="stat-label">CrimX Verified</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. TWO-COLUMN BALANCED WORKSPACE GRID -->
+            <div class="dash-workspace-grid">
+                
+                <!-- LEFT COLUMN: Social & Friends Hub -->
+                <div class="dash-col-social">
+                    <div class="dash-card dash-friends-hub-card">
+                        <div class="dash-card-header">
+                            <div class="dash-card-title-wrap">
+                                <span class="card-icon-badge">👥</span>
+                                <div>
+                                    <h3 class="dash-card-title">Friends</h3>
+                                    <span class="dash-card-subtitle">Connect & Chat Live</span>
+                                </div>
+                            </div>
+                            <div class="dash-card-header-badge">
+                                <span id="cim-friends-count" class="cim-count-tag">0</span>
+                                <span id="friends-count-badge" style="display: none;">0 Friends</span>
+                            </div>
+                        </div>
+
+                        <!-- Add Friend Input Action Group (NEVER OVERLAPS!) -->
+                        <div class="dash-add-friend-wrapper">
+                            <form onsubmit="sendFriendRequestByUsername(event)" class="input-action-group dash-friends-search-row">
+                                <input type="text" id="friend-search-input" placeholder="Add @username..." required autocomplete="off" class="friends-search-input">
+                                <button type="submit" class="btn-primary btn-action-pill">
+                                    + Add
+                                </button>
+                            </form>
+                            <div id="friend-action-feedback" style="display: none; padding: 8px 12px; border-radius: 10px; font-size: 0.78rem; margin-top: 8px;"></div>
+                        </div>
+
+                        <!-- Incoming Pending Requests -->
+                        <div id="pending-requests-box" style="display: none; margin-top: 14px;">
+                            <div style="font-size: 0.74rem; font-weight: 700; color: #fb923c; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                ⏳ Pending Requests (<span id="pending-count">0</span>)
+                            </div>
+                            <div id="pending-requests-list" class="pending-requests-grid"></div>
+                        </div>
+
+                        <!-- Friends Directory List -->
+                        <div class="dash-friends-list-container">
+                            <div id="cim-conversations-list" class="cim-conversations-list">
+                                <div style="color: var(--text-secondary); font-size: 0.76rem; text-align: center; padding: 24px 8px;">
+                                    Loading friends...
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Hidden compatibility element -->
+                        <div id="active-friends-list" style="display: none;"></div>
+                    </div>
+                </div>
+
+                <!-- CENTER COLUMN: CrimX Pages Hub -->
+                <div class="dash-col-pages">
+                    <div class="dash-card dash-pages-hub-card" id="dash-pages-hub">
+                        <div class="dash-card-header">
+                            <div class="dash-card-title-wrap">
+                                <span class="card-icon-badge" style="background: rgba(249, 115, 22, 0.15); border-color: rgba(249, 115, 22, 0.3);">📑</span>
+                                <div>
+                                    <h3 class="dash-card-title">CrimX Pages</h3>
+                                    <span class="dash-card-subtitle">Personal Sites & Repositories</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span id="dash-pages-count-tag" class="cim-count-tag" style="background: rgba(249, 115, 22, 0.15); color: #f97316; border-color: rgba(249, 115, 22, 0.3);">0 Live</span>
+                                <button type="button" class="btn-primary btn-action-pill" onclick="window.openNewPageModal()" style="height: 34px; padding: 0 14px; font-size: 0.8rem; font-weight: 700;">
+                                    + New Page
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Primary "Me Page" Banner Card -->
+                        <div class="dash-pages-me-banner-card">
+                            <div style="display: flex; align-items: center; gap: 14px;">
+                                <div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #f97316, #ef4444); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; box-shadow: 0 4px 14px rgba(249, 115, 22, 0.3);">
+                                    👤
+                                </div>
+                                <div>
+                                    <div style="font-weight: 800; color: #fff; font-size: 1.05rem;">Your "Me Page"</div>
+                                    <div style="font-size: 0.78rem; color: var(--text-secondary); font-family: monospace;" id="dash-me-page-url">crimx.crimsonflame.net/@user</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button type="button" class="btn-secondary" onclick="window.editPageById('me')" style="padding: 6px 12px; font-size: 0.78rem; font-weight: 600;">
+                                    ✏️ Edit
+                                </button>
+                                <button type="button" class="btn-primary" onclick="window.openLivePage('me')" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 600;">
+                                    Open ↗
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Your Repositories & Pages Header -->
+                        <div style="font-size: 0.76rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+                            Repositories & Custom Pages
+                        </div>
+
+                        <!-- Repositories List Container -->
+                        <div id="dash-pages-list-container" style="display: flex; flex-direction: column; gap: 8px; flex: 1; min-height: 200px;">
+                            <div style="text-align: center; color: var(--text-secondary); padding: 36px 16px; font-size: 0.84rem;">
+                                Loading your pages...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: CIM Instant Messager & DoorAuth Hub -->
+                <div class="dash-col-main">
+                    
+                    <!-- CIM Instant Messager Card -->
+                    <div class="dash-card dash-cim-card" id="dash-cim-block">
+                        <div class="cim-header">
+                            <div class="cim-title-wrap">
+                                <div class="cim-icon-pill">💬</div>
+                                <div>
+                                    <h3 class="cim-title">CIM</h3>
+                                    <span class="cim-subtitle">CrimX Instant Messager</span>
+                                </div>
+                            </div>
+                            <div class="cim-header-actions">
+                                <button type="button" class="cim-fullscreen-btn" onclick="toggleCIMFullscreen()" id="cim-fullscreen-btn" title="Toggle Fullscreen Chat (Esc to exit)">
+                                    <svg id="cim-fullscreen-icon-expand" viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+                                        <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+                                    </svg>
+                                    <svg id="cim-fullscreen-icon-compress" viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="display: none;">
+                                        <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-14v3h3v2h-5V5h2z"/>
+                                    </svg>
+                                    <span id="cim-fullscreen-label">Fullscreen</span>
+                                </button>
+                                <div class="cim-online-badge">
+                                    <span class="cim-pulse-dot"></span> LIVE
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cim-chat-area" id="cim-chat-area">
+                            <div id="cim-chat-header" class="cim-chat-header" style="display: none;">
+                                <div class="cim-chat-user-wrap">
+                                    <div class="cim-chat-avatar-wrap">
+                                        <img id="cim-active-avatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Avatar">
+                                        <span id="cim-active-dot" class="cim-active-dot"></span>
+                                    </div>
+                                    <div style="overflow: hidden;">
+                                        <div id="cim-active-name" class="cim-active-name">Friend</div>
+                                        <div id="cim-active-status" class="cim-active-status">Online</div>
+                                    </div>
+                                </div>
+                                <div class="cim-chat-header-actions" style="display: flex; align-items: center; gap: 6px;">
+                                    <button type="button" class="cim-action-btn" onclick="toggleCIMFullscreen()" title="Toggle Fullscreen">
+                                        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                                            <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+                                        </svg>
+                                    </button>
+                                    <button type="button" class="cim-action-btn" onclick="clearActiveCIMChat()" title="Close chat">✕</button>
+                                </div>
+                            </div>
+
+                            <div id="cim-messages-box" class="cim-messages-box">
+                                <div id="cim-no-chat-state" class="cim-no-chat-state">
+                                    <div style="font-size: 3rem; margin-bottom: 12px; filter: drop-shadow(0 0 16px rgba(220,38,38,0.3));">💬</div>
+                                    <div style="font-family: 'Outfit', sans-serif; font-weight: 800; color: #fff; font-size: 1.35rem; margin-bottom: 6px; letter-spacing: -0.3px;">CrimX Instant Messager</div>
+                                    <div style="font-size: 0.88rem; line-height: 1.5; max-width: 320px; color: var(--text-secondary); margin: 0 auto;">
+                                        Pick a friend from your list on the left to start instant, real-time messaging!
+                                    </div>
+                                </div>
+                                <div id="cim-messages-list" style="display: none; flex-direction: column; gap: 10px;"></div>
+                            </div>
+
+                            <form id="cim-input-form" onsubmit="sendCIMMessage(event)" class="cim-input-form" style="display: none;">
+                                <input type="text" id="cim-message-input" placeholder="Type an instant message..." autocomplete="off" maxlength="1000" class="cim-input-field">
+                                <button type="submit" class="cim-send-btn" title="Send message (Enter)">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- DoorAuth Linked Apps Card -->
+                    <div class="dash-card dash-doorauth-card" id="dash-doorauth-block">
+                        <div class="doorauth-header">
+                            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div class="doorauth-icon-badge">🚪</div>
+                                    <div>
+                                        <h3 class="doorauth-title">Linked Apps</h3>
+                                        <span style="font-size: 0.74rem; color: var(--text-secondary);">CrimX Linked Apps</span>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <span id="doorauth-count-badge" class="doorauth-count-tag">0 Apps</span>
+                                    <a href="/developer" class="doorauth-dev-link" title="Open CF Dev Panel">
+                                        <span>Dev Hub</span>
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="doorauth-body" style="margin-top: 12px;">
+                            <div class="doorauth-desc" style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.4;">
+                                Manage third-party games, services, and developer access linked to your CrimX account.
+                            </div>
+
+                            <div id="doorauth-apps-list" class="doorauth-apps-list">
+                                <div class="doorauth-empty-state">
+                                    <div style="font-size: 1.6rem; margin-bottom: 4px;">🔗</div>
+                                    <div style="font-weight: 700; color: #fff; font-size: 0.88rem; margin-bottom: 2px;">No External Apps Linked</div>
+                                    <div style="color: var(--text-secondary); font-size: 0.76rem; line-height: 1.4;">
+                                        Use "Sign in with CrimX" on supported apps or link with a code below.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Quick Connect Form with Input Action Group (NEVER OVERLAPS!) -->
+                            <form onsubmit="connectDoorAuthCode(event)" class="input-action-group doorauth-connect-form" style="margin-top: 14px;">
+                                <input type="text" id="doorauth-code-input" placeholder="Enter App Link Code..." autocomplete="off" class="doorauth-connect-input">
+                                <button type="submit" class="btn-primary btn-action-pill">
+                                    + Link App
+                                </button>
+                            </form>
+                            <div id="doorauth-feedback" style="display: none; padding: 8px 12px; border-radius: 8px; font-size: 0.78rem; margin-top: 8px;"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+                <!-- Hidden compatibility elements for existing listeners -->
+                <div style="display: none;" aria-hidden="true">
+                    <div id="showcase-banner-bg"></div>
+                    <img id="showcase-avatar" src="">
+                    <span id="showcase-display-name"></span>
+                    <span id="showcase-handle"></span>
+                    <span id="showcase-status-text"></span>
+                    <span id="showcase-bio"></span>
+                    <span id="showcase-staff-badge"></span>
+                    <span id="showcase-dev-badge"></span>
+                    <span id="showcase-member-badge"></span>
+                    <div id="cim-fullscreen-backdrop"></div>
+                </div>
+
+            </div>
+
+            <!-- Settings Studio Modal Overlay -->
+            <div id="settings-studio-modal" class="settings-studio-modal">
+                <div class="settings-studio-inner">
+                    <!-- Settings Header -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
+                        <h1 style="font-family: 'Outfit', sans-serif; font-size: 1.85rem; font-weight: 800; color: #fff; margin: 0; text-align: left;">
+                            CrimX Settings
+                        </h1>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <button type="button" class="btn-secondary" onclick="toggleSettingsStudio(false)" style="width: auto; padding: 8px 18px; font-size: 0.85rem; font-weight: 700;">
+                                ✕ Close
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Settings 3-Column Layout: Navigation | Active Panel | Live Preview -->
+                    <div class="settings-layout">
+                
+                <!-- Col 1: Sidebar Navigation -->
+                <aside class="settings-sidebar">
+                    <div class="settings-user-summary">
+                        <img id="sidebar-user-avatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="User Avatar">
+                        <div style="overflow: hidden; text-align: left;">
+                            <div id="sidebar-user-name" style="font-weight: 800; color: #fff; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Loading...</div>
+                            <div id="sidebar-user-handle" style="font-size: 0.78rem; color: var(--text-secondary); font-family: monospace;">@username</div>
+                            <div id="sidebar-role-badge" class="settings-role-badge">🔥 Member</div>
+                        </div>
+                    </div>
+
+                    <nav class="settings-nav">
+                        <button class="settings-nav-item active" onclick="switchSettingsTab('profile', this)">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            <span>Profile & Identity</span>
+                        </button>
+
+                        <button class="settings-nav-item" onclick="switchSettingsTab('security', this)">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+                            <span>Account & Security</span>
+                        </button>
+
+                        <button class="settings-nav-item" onclick="switchSettingsTab('integrations', this)">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+                            <span>Gaming Integrations</span>
+                        </button>
+
+                        <button class="settings-nav-item" onclick="switchSettingsTab('apps', this)">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
+                            <span>Connected Apps</span>
+                        </button>
+
+                        <button class="settings-nav-item" onclick="switchSettingsTab('preferences', this)">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                            <span>Preferences</span>
+                        </button>
+
+                        <div class="settings-nav-divider"></div>
+
+                        <button class="settings-nav-item" style="color: #ef4444;" onclick="switchSettingsTab('danger', this)">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            <span>Danger Zone</span>
+                        </button>
+                    </nav>
+                </aside>
+
+                <!-- Col 2: Active Tab Panel -->
+                <main class="settings-panel">
+                    
+                    <!-- TAB 1: Profile & Identity -->
+                    <div id="tab-profile" class="settings-tab-pane active">
+                        <div class="settings-tab-header">
+                            <h2>Profile & Identity</h2>
+                            <p>Customize how you appear across CrimsonFlame games, VR servers, and communities.</p>
+                        </div>
+
+                        <form onsubmit="submitProfile(event)">
+                            
+                            <!-- Banner Customizer -->
+                            <div class="settings-section-block">
+                                <div class="settings-section-title">
+                                    <span>🎨 Profile Banner</span>
+                                </div>
+                                <div id="banner-uploader-box" class="banner-uploader-box" onclick="document.getElementById('banner-file-input').click()">
+                                    <img id="banner-preview-img" class="banner-preview-img" src="" style="display: none;" alt="Banner Preview">
+                                    <div class="banner-uploader-overlay">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                                        <span>Click to upload custom banner</span>
+                                    </div>
+                                    <input type="file" id="banner-file-input" accept="image/*" style="display:none;" onchange="handleUpload(event.target.files[0], 'banner')">
+                                </div>
+                                
+                                <div style="display: flex; gap: 8px; margin: 12px 0 8px; flex-wrap: wrap;">
+                                    <input type="url" id="banner-url-input" class="settings-input" placeholder="Or paste direct image URL (https://...)" style="flex: 1; min-width: 200px; font-size: 0.85rem;">
+                                    <button type="button" class="btn-secondary" onclick="applyBannerUrl()" style="width: auto; padding: 8px 16px; font-size: 0.82rem; font-weight: 700;">Apply URL</button>
+                                    <button type="button" class="btn-secondary" onclick="resetBannerToDefault()" style="width: auto; padding: 8px 14px; font-size: 0.82rem; color: var(--crimson-light);">Reset to Default</button>
+                                </div>
+                                
+                                <div style="font-size: 0.76rem; color: var(--text-secondary); margin-bottom: 6px;">Or choose a CrimsonFlame preset theme:</div>
+                                <div class="preset-banner-grid">
+                                    <div class="preset-banner-thumb active" style="background: linear-gradient(135deg, #2b0d18 0%, #dc2626 50%, #15090f 100%);" onclick="selectPresetBanner('linear-gradient(135deg, #2b0d18 0%, #dc2626 50%, #15090f 100%)')"></div>
+                                    <div class="preset-banner-thumb" style="background: linear-gradient(135deg, #091e3a 0%, #2563eb 50%, #030a14 100%);" onclick="selectPresetBanner('linear-gradient(135deg, #091e3a 0%, #2563eb 50%, #030a14 100%)')"></div>
+                                    <div class="preset-banner-thumb" style="background: linear-gradient(135deg, #132a13 0%, #16a34a 50%, #051006 100%);" onclick="selectPresetBanner('linear-gradient(135deg, #132a13 0%, #16a34a 50%, #051006 100%)')"></div>
+                                    <div class="preset-banner-thumb" style="background: linear-gradient(135deg, #2e1065 0%, #9333ea 50%, #0f041d 100%);" onclick="selectPresetBanner('linear-gradient(135deg, #2e1065 0%, #9333ea 50%, #0f041d 100%)')"></div>
+                                </div>
+                            </div>
+
+                            <!-- Avatar & Names -->
+                            <div class="settings-section-block">
+                                <div class="settings-section-title">
+                                    <span>👤 Avatar & Names</span>
+                                </div>
+                                
+                                <div class="avatar-edit-cluster">
+                                    <div class="avatar-edit-box" onclick="document.getElementById('pfp-file-input').click()">
+                                        <img id="dashboard-pfp-preview" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Avatar">
+                                        <input type="file" id="pfp-file-input" accept="image/*" style="display:none;" onchange="handleUpload(event.target.files[0], 'pfp')">
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <button type="button" class="btn-secondary" onclick="document.getElementById('pfp-file-input').click()" style="padding: 7px 14px; font-size: 0.82rem; font-weight: 700; width: auto; margin-bottom: 4px;">
+                                            Upload Avatar
+                                        </button>
+                                        <div style="font-size: 0.76rem; color: var(--text-secondary);">PNG, JPG, or GIF up to 5MB.</div>
+                                        <div id="upload-status" class="status-text"></div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group-row">
+                                    <div>
+                                        <div class="form-label">
+                                            <span>Display Name</span>
+                                            <span class="char-count" id="display-name-count">0/32</span>
+                                        </div>
+                                        <input type="text" id="display-name" class="settings-input" placeholder="Display Name" maxlength="32" oninput="updateLivePreview()">
+                                    </div>
+                                    <div>
+                                        <div class="form-label">
+                                            <span>Unique Username</span>
+                                            <span style="font-size: 0.72rem; color: var(--crimson-light);">Cooldown 30d</span>
+                                        </div>
+                                        <input type="text" id="username-input" class="settings-input" placeholder="username" style="font-family: monospace;" maxlength="24" oninput="updateLivePreview()">
+                                    </div>
+                                </div>
+
+                                <div style="margin-bottom: 14px;">
+                                    <div class="form-label">
+                                        <span>Status / Custom Tagline</span>
+                                        <span class="char-count" id="status-text-count">0/60</span>
+                                    </div>
+                                    <input type="text" id="status-text-input" class="settings-input" placeholder="e.g., Testing VR Locomotion Lab" maxlength="60" oninput="updateLivePreview()">
+                                </div>
+
+                                <div>
+                                    <div class="form-label">
+                                        <span>About Me (Bio)</span>
+                                        <span class="char-count" id="bio-count">0/160</span>
+                                    </div>
+                                    <textarea id="bio-input" class="settings-textarea" placeholder="Tell the CrimsonFlame community about yourself..." maxlength="160" oninput="updateLivePreview()"></textarea>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-primary" style="padding: 13px 28px; font-weight: 800; font-size: 0.95rem; width: auto;">
+                                💾 Save Profile Changes
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- TAB 2: Account & Security -->
+                    <div id="tab-security" class="settings-tab-pane">
+                        <div class="settings-tab-header">
+                            <h2>Account & Security</h2>
+                            <p>Protect your universal identity and manage authentication credentials.</p>
+                        </div>
+
+                        <!-- CrimX Universal ID Card -->
+                        <div class="settings-section-block">
+                            <div class="settings-section-title">
+                                <span>🛡️ Universal CrimX Identity</span>
+                            </div>
+                            <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 12px;">Your permanent player identifier across the CrimsonFlame ecosystem.</p>
+                            <div style="display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.4); padding: 12px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);">
+                                <div style="font-family: monospace; font-size: 0.9rem; color: #fff; flex: 1; word-break: break-all;" id="security-uid-display">Loading UID...</div>
+                                <button type="button" class="btn-secondary" onclick="copyCrimXUID()" style="width: auto; padding: 6px 14px; font-size: 0.78rem; font-weight: 700;">
+                                    Copy UID
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Email Management & Change Email -->
+                        <div class="settings-section-block">
+                            <div class="settings-section-title">
+                                <span>📧 Account Email</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 14px;">
+                                <div>
+                                    <div style="font-weight: 700; color: #fff; font-size: 0.95rem;" id="security-email-display">user@example.com</div>
+                                    <div id="security-email-badge" style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.76rem; color: #4ade80; margin-top: 4px;">
+                                        ✓ Verified Account
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    <button id="resend-verification-btn" type="button" class="btn-secondary" onclick="sendVerificationEmailAgain()" style="display: none; width: auto; padding: 7px 14px; font-size: 0.82rem;">
+                                        Resend Verification
+                                    </button>
+                                    <button type="button" class="btn-secondary" onclick="toggleChangeEmailForm()" style="width: auto; padding: 7px 16px; font-size: 0.82rem; font-weight: 700;">
+                                        ✏️ Change Email
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Expandable Change Email Form -->
+                            <div id="change-email-container" style="display: none; background: rgba(0,0,0,0.35); border: 1px solid rgba(220,38,38,0.25); border-radius: 12px; padding: 16px 18px; margin-top: 10px;">
+                                <div style="font-weight: 700; color: #fff; font-size: 0.9rem; margin-bottom: 4px;">Update Primary Email Address</div>
+                                <p style="color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 12px; line-height: 1.4;">
+                                    A verification link will be sent to your new email. Enter your current password to authorize this change.
+                                </p>
+                                <form onsubmit="submitEmailChange(event)">
+                                    <div style="display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 12px;">
+                                        <div>
+                                            <label class="form-label" style="font-size: 0.78rem;">New Email Address</label>
+                                            <input type="email" id="new-email-input" class="settings-input" placeholder="new-email@example.com" required>
+                                        </div>
+                                        <div>
+                                            <label class="form-label" style="font-size: 0.78rem;">Current Password (to confirm)</label>
+                                            <input type="password" id="change-email-password-input" class="settings-input" placeholder="••••••••" required autocomplete="current-password">
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; gap: 8px;">
+                                        <button type="submit" id="btn-save-email" class="btn-primary" style="width: auto; padding: 8px 20px; font-size: 0.84rem; font-weight: 700;">
+                                            Send Confirmation Link
+                                        </button>
+                                        <button type="button" class="btn-secondary" onclick="toggleChangeEmailForm(false)" style="width: auto; padding: 8px 16px; font-size: 0.84rem;">
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Password Management -->
+                        <div class="settings-section-block">
+                            <div class="settings-section-title">
+                                <span>🔑 Password & Credentials</span>
+                            </div>
+                            
+                            <!-- Direct In-Page Change Form -->
+                            <form id="direct-password-form" onsubmit="submitDirectPasswordChange(event)" style="margin-bottom: 20px;">
+                                <div style="display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 14px;">
+                                    <div>
+                                        <label class="form-label">Current Password</label>
+                                        <input type="password" id="current-password-input" class="settings-input" placeholder="••••••••" required autocomplete="current-password">
+                                    </div>
+                                    <div class="form-group-row" style="margin-bottom: 0;">
+                                        <div>
+                                            <label class="form-label">New Password</label>
+                                            <input type="password" id="new-password-input" class="settings-input" placeholder="Min. 6 characters" required minlength="6" autocomplete="new-password">
+                                        </div>
+                                        <div>
+                                            <label class="form-label">Confirm New Password</label>
+                                            <input type="password" id="confirm-new-password-input" class="settings-input" placeholder="Repeat new password" required minlength="6" autocomplete="new-password">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn-primary" style="width: auto; padding: 10px 22px; font-weight: 700; font-size: 0.88rem;">
+                                    Update Password
+                                </button>
+                            </form>
+
+                            <div style="border-top: 1px solid rgba(255, 255, 255, 0.06); padding-top: 14px;">
+                                <p style="color: var(--text-secondary); font-size: 0.84rem; margin-bottom: 12px;">Forgot your current password? We can send a secure reset link to your email.</p>
+                                <button type="button" class="btn-secondary" onclick="triggerPasswordReset()" style="width: auto; padding: 8px 18px; font-weight: 700; font-size: 0.84rem; border-color: rgba(255, 255, 255, 0.15);">
+                                    Send Password Reset Email
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 3: Gaming & Social Integrations -->
+                    <div id="tab-integrations" class="settings-tab-pane">
+                        <div class="settings-tab-header">
+                            <h2>Gaming & Social Integrations</h2>
+                            <p>Connect your Discord and YouTube accounts to showcase them on your CrimsonFlame player profile.</p>
+                        </div>
+
+                        <!-- Discord Integration Card -->
+                        <div class="settings-section-block">
+                            <div class="section-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" style="width: 24px; height: 24px;"> 
+                                    <h3 style="margin: 0; font-family: var(--font-heading); font-size: 1.15rem; color: #fff;">Discord Integration</h3>
+                                </div>
+                                <span id="discord-status-badge" class="badge-pill-aero" style="background: rgba(88, 101, 242, 0.2); color: #818cf8; border-color: rgba(88, 101, 242, 0.4);">
+                                    Unlinked
+                                </span>
+                            </div>
+
+                            <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 14px; line-height: 1.5;">
+                                Link your Discord account to display your handle on your profile and unlock community perks.
+                            </p>
+
+                            <!-- Unlinked State -->
+                            <div id="discord-unlinked" style="display: block;">
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;">
+                                    <input type="text" id="discord-handle-input" class="settings-input" placeholder="Enter Discord username (e.g. crimson_player)" style="flex: 1; min-width: 220px;">
+                                    <button type="button" class="btn-primary btn-aero-primary" onclick="linkDiscordHandle()" style="background: #5865F2; border-color: #5865F2; width: auto; padding: 10px 22px; font-weight: 700;">
+                                        Link Discord
+                                    </button>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <button type="button" class="btn-secondary" onclick="generateDiscordLinkCode()" style="font-size: 0.78rem; padding: 6px 14px; width: auto;">
+                                        Or Link via Bot Code
+                                    </button>
+                                    <span style="font-size: 0.75rem; color: var(--text-secondary);">Direct username linking is fastest</span>
+                                </div>
+                                <p id="discord-link-code-display" style="display: none; text-align: center; font-size: 1rem; font-family: monospace; background: rgba(12,6,8,0.6); padding: 12px; border-radius: 8px; color: #4ade80; border: 1px dashed #5865F2; margin-top: 12px;"></p>
+                            </div>
+
+                            <!-- Linked State -->
+                            <div id="discord-linked" class="linked-card" style="display: none; background: rgba(88, 101, 242, 0.1); border: 1px solid rgba(88, 101, 242, 0.3); padding: 14px 18px; border-radius: 12px; margin-bottom: 14px;">
+                                <img id="discord-avatar" src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" style="border: 2px solid #5865F2; width: 44px; height: 44px; border-radius: 50%;">
+                                <div style="flex: 1;">
+                                    <div class="linked-label" style="color: #818cf8; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">Linked Discord Account</div>
+                                    <div id="discord-username" class="linked-name" style="font-size: 1.05rem; font-weight: 700; color: #fff;">@username</div>
+                                </div>
+                                <button type="button" class="btn-danger" style="width: auto; padding: 6px 14px; font-size: 0.8rem;" onclick="unlinkDiscord()">Unlink</button>
+                            </div>
+
+                            <!-- Privacy Toggle -->
+                            <div class="toggle-row" style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.08);">
+                                <div class="toggle-info">
+                                    <h4 style="font-size: 0.9rem; color: #fff;">Show Discord on my public profile</h4>
+                                    <p style="font-size: 0.78rem; color: var(--text-secondary);">When enabled, visitors and friends can see your Discord badge on your profile.</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="pref-show-discord" checked onchange="saveSocialVisibilityPreferences()">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- YouTube Integration Card -->
+                        <div class="settings-section-block">
+                            <div class="section-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <svg viewBox="0 0 24 24" width="26" height="26" fill="#ef4444"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                                    <h3 style="margin: 0; font-family: var(--font-heading); font-size: 1.15rem; color: #fff;">YouTube Integration</h3>
+                                </div>
+                                <span id="youtube-status-badge" class="badge-pill-aero" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5; border-color: rgba(239, 68, 68, 0.4);">
+                                    Unlinked
+                                </span>
+                            </div>
+
+                            <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 14px; line-height: 1.5;">
+                                Link your YouTube channel to feature your content and videos directly on your CrimX player profile.
+                            </p>
+
+                            <!-- Unlinked State -->
+                            <div id="youtube-unlinked" style="display: block;">
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px;">
+                                    <input type="text" id="youtube-handle-input" class="settings-input" placeholder="Enter channel handle or link (e.g. @CrimsonFlame or youtube.com/@...)" style="flex: 1; min-width: 240px;">
+                                    <button type="button" class="btn-primary btn-aero-primary" onclick="linkYouTubeHandle()" style="background: #dc2626; border-color: #dc2626; width: auto; padding: 10px 22px; font-weight: 700;">
+                                        Link YouTube
+                                    </button>
+                                </div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">Works with handles (@channel), custom URLs, or channel IDs.</div>
+                            </div>
+
+                            <!-- Linked State -->
+                            <div id="youtube-linked" class="linked-card" style="display: none; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); padding: 14px 18px; border-radius: 12px; margin-bottom: 14px;">
+                                <div style="width: 44px; height: 44px; border-radius: 50%; background: #dc2626; display: flex; align-items: center; justify-content: center; color: white;">
+                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M10 15l5-3-5-3v6z"/><path d="M21.58 7.19c-.23-.86-.91-1.54-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42c-.86.23-1.54.91-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.86.91 1.54 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42c.86-.23 1.54-.91 1.77-1.77C22 15.25 22 12 22 12s0-3.25-.42-4.81zM10 15l5-3-5-3v6z"/></svg>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div class="linked-label" style="color: #f87171; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">Linked YouTube Channel</div>
+                                    <div id="youtube-channel-name" class="linked-name" style="font-size: 1.05rem; font-weight: 700; color: #fff;">@channel</div>
+                                    <a id="youtube-channel-link" href="#" target="_blank" style="font-size: 0.78rem; color: #fca5a5; text-decoration: none;">View Channel ↗</a>
+                                </div>
+                                <button type="button" class="btn-danger" style="width: auto; padding: 6px 14px; font-size: 0.8rem;" onclick="unlinkYouTube()">Unlink</button>
+                            </div>
+
+                            <!-- Privacy Toggle -->
+                            <div class="toggle-row" style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.08);">
+                                <div class="toggle-info">
+                                    <h4 style="font-size: 0.9rem; color: #fff;">Show YouTube on my public profile</h4>
+                                    <p style="font-size: 0.78rem; color: var(--text-secondary);">When enabled, visitors and friends can see your YouTube channel badge on your profile.</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="pref-show-youtube" checked onchange="saveSocialVisibilityPreferences()">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 4: Connected Applications -->
+                    <div id="tab-apps" class="settings-tab-pane">
+                        <div class="settings-tab-header">
+                            <h2>Connected Applications</h2>
+                            <p>Third-party games, services, and developer applications authorized via <strong>CrimX Auth</strong>.</p>
+                        </div>
+
+                        <div class="settings-section-block">
+                            <div class="settings-section-title">
+                                <span>Authorized Games & Services</span>
+                            </div>
+                            <div id="connected-apps-list" style="display: flex; flex-direction: column; gap: 12px;">
+                                <p id="connected-apps-empty" style="color: var(--text-secondary); font-size: 0.85rem; text-align: center; padding: 24px; background: rgba(0,0,0,0.3); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.1);">
+                                    No external applications have been authorized yet.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="settings-section-block" style="border-color: rgba(220, 38, 38, 0.3); background: rgba(22, 12, 16, 0.6);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+                                <div>
+                                    <div style="font-weight: 800; color: #fff; font-size: 1rem; margin-bottom: 4px;">Building your own game or app?</div>
+                                    <div style="color: var(--text-secondary); font-size: 0.85rem;">Create Client IDs and integration keys using the Developer Portal.</div>
+                                </div>
+                                <a href="/developer" class="btn-primary" style="width: auto; padding: 9px 20px; font-size: 0.85rem; font-weight: 700; text-decoration: none;">
+                                    Launch Developer Portal →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 5: Preferences & Themes -->
+                    <div id="tab-preferences" class="settings-tab-pane">
+                        <div class="settings-tab-header">
+                            <h2>Preferences & Themes</h2>
+                            <p>Customize your visual ambiance, sound effects, beta testing access, and notification settings.</p>
+                        </div>
+
+                        <!-- CrimX Themes Engine Selector -->
+                        <div class="settings-section-block">
+                            <div class="settings-section-title">
+                                <span>🎨 CrimX Glow Themes</span>
+                            </div>
+                            <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 14px;">Select your signature ambient glow theme for your CrimX dashboard and workspace.</p>
+                            <div class="theme-picker-grid">
+                                <div class="theme-card-option" data-theme-val="crimson" onclick="window.setCrimXTheme('crimson')">
+                                    <div class="theme-preview-swatch" style="background: linear-gradient(135deg, #dc2626, #f97316);"></div>
+                                    <div class="theme-option-info">
+                                        <div class="theme-option-name">Crimson Flame</div>
+                                        <div class="theme-option-desc">Official studio signature</div>
+                                    </div>
+                                </div>
+                                <div class="theme-card-option" data-theme-val="emerald" onclick="window.setCrimXTheme('emerald')">
+                                    <div class="theme-preview-swatch" style="background: linear-gradient(135deg, #10b981, #059669);"></div>
+                                    <div class="theme-option-info">
+                                        <div class="theme-option-name">Cyber Emerald</div>
+                                        <div class="theme-option-desc">Vibrant neon matrix</div>
+                                    </div>
+                                </div>
+                                <div class="theme-card-option" data-theme-val="void" onclick="window.setCrimXTheme('void')">
+                                    <div class="theme-preview-swatch" style="background: linear-gradient(135deg, #8b5cf6, #3b82f6);"></div>
+                                    <div class="theme-option-info">
+                                        <div class="theme-option-name">Abyssal Void</div>
+                                        <div class="theme-option-desc">Deep ultraviolet cosmic</div>
+                                    </div>
+                                </div>
+                                <div class="theme-card-option" data-theme-val="solar" onclick="window.setCrimXTheme('solar')">
+                                    <div class="theme-preview-swatch" style="background: linear-gradient(135deg, #f59e0b, #ea580c);"></div>
+                                    <div class="theme-option-info">
+                                        <div class="theme-option-name">Solar Flare</div>
+                                        <div class="theme-option-desc">Blazing gold & amber</div>
+                                    </div>
+                                </div>
+                                <div class="theme-card-option" data-theme-val="glacier" onclick="window.setCrimXTheme('glacier')">
+                                    <div class="theme-preview-swatch" style="background: linear-gradient(135deg, #06b6d4, #38bdf8);"></div>
+                                    <div class="theme-option-info">
+                                        <div class="theme-option-name">Glacier Cyan</div>
+                                        <div class="theme-option-desc">Sub-zero arctic frost</div>
+                                    </div>
+                                </div>
+                                <div class="theme-card-option" data-theme-val="frutiger-aero" onclick="window.setCrimXTheme('frutiger-aero')">
+                                    <div class="theme-preview-swatch" style="background: linear-gradient(135deg, #0ea5e9 0%, #10b981 50%, #38bdf8 100%); box-shadow: inset 0 2px 4px rgba(255,255,255,0.8), 0 0 12px rgba(14,165,233,0.5);"></div>
+                                    <div class="theme-option-info">
+                                        <div class="theme-option-name">Frutiger Aero</div>
+                                        <div class="theme-option-desc">Glossy crystal glass & sky vibrancy</div>
+                                    </div>
+                                </div>
+                                <div class="theme-card-option" data-theme-val="frutiger-metro" onclick="window.setCrimXTheme('frutiger-metro')">
+                                    <div class="theme-preview-swatch" style="background: linear-gradient(90deg, #e51400 50%, #0078d7 50%); border-radius: 0;"></div>
+                                    <div class="theme-option-info">
+                                        <div class="theme-option-name">Frutiger Metro</div>
+                                        <div class="theme-option-desc">Bold typography & flat dynamic tiles</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section-block">
+                            <div class="toggle-row">
+                                <div class="toggle-info">
+                                    <h4>Audio Feedback & SFX</h4>
+                                    <p>Play subtle audio cues when saving settings, clicking tabs, or copying keys.</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="pref-sfx" checked onchange="savePreferences()">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-row">
+                                <div class="toggle-info">
+                                    <h4>CrimsonFlame VR Beta Program</h4>
+                                    <p>Opt-in to experimental builds, locomotion playtests, and preview VR servers.</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="pref-beta" onchange="savePreferences()">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="toggle-row">
+                                <div class="toggle-info">
+                                    <h4>Studio Updates & Newsletters</h4>
+                                    <p>Receive occasional email alerts regarding major game updates and events.</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="pref-email-updates" checked onchange="savePreferences()">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- TAB 6: Danger Zone -->
+                    <div id="tab-danger" class="settings-tab-pane">
+                        <div class="settings-tab-header">
+                            <h2 style="color: #ef4444;">Danger Zone</h2>
+                            <p>Manage account security session termination and data removal.</p>
+                        </div>
+
+                        <div class="settings-section-block" style="border-color: rgba(239, 68, 68, 0.3); background: rgba(30, 10, 14, 0.4);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+                                <div>
+                                    <div style="font-weight: 800; color: #fff; font-size: 0.95rem; margin-bottom: 4px;">Sign Out of All Sessions</div>
+                                    <div style="color: var(--text-secondary); font-size: 0.85rem;">Ends your active session on this device and revokes temporary local tokens.</div>
+                                </div>
+                                <button type="button" class="btn-danger" onclick="logOutUser()" style="width: auto; padding: 10px 22px; font-weight: 700;">
+                                    Sign Out Now
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="settings-section-block" style="border-color: rgba(239, 68, 68, 0.3); background: rgba(30, 10, 14, 0.4);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+                                <div>
+                                    <div style="font-weight: 800; color: #ef4444; font-size: 0.95rem; margin-bottom: 4px;">Delete CrimsonFlame Account</div>
+                                    <div style="color: var(--text-secondary); font-size: 0.85rem;">Permanently deletes your player profile, cloud inventories, and developer credentials.</div>
+                                </div>
+                                <button type="button" class="btn-danger" onclick="confirmDeleteAccount()" style="width: auto; padding: 10px 22px; font-weight: 700; background: #b91c1c;">
+                                    Delete Account
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </main>
+
+                <!-- Col 3: Live Real-Time Gamer Profile Preview Card -->
+                <aside class="settings-preview-col">
+                    <div style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.8px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+                        <span>● Live Profile Preview</span>
+                    </div>
+
+                    <div class="profile-card-preview">
+                        <!-- Preview Header Banner -->
+                        <div id="preview-banner" class="preview-card-header">
+                            <div class="preview-card-avatar-wrap">
+                                <img id="preview-avatar" class="preview-card-avatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Preview Avatar">
+                                <div class="preview-status-indicator" title="Online"></div>
+                            </div>
+                        </div>
+
+                        <!-- Preview Card Body -->
+                        <div class="preview-card-body">
+                            <div id="preview-name" class="preview-card-name">Player Name</div>
+                            <div id="preview-handle" class="preview-card-handle">@username</div>
+                            
+                            <div id="preview-role-container" style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px;">
+                                <div id="preview-staff-badge" class="preview-staff-badge" style="display: none; margin-bottom: 0;">
+                                    🛡️ CrimsonFlame Staff
+                                </div>
+                                <div id="preview-dev-badge" class="preview-dev-badge" style="display: none; margin-bottom: 0;">
+                                    🛠️ Developer
+                                </div>
+                                <div id="preview-member-badge" class="preview-card-badge" style="margin-bottom: 0;">
+                                    🔥 CrimsonFlame Member
+                                </div>
+                            </div>
+
+                            <div id="preview-status-box" class="preview-card-status-box">
+                                <span style="font-style: normal;">💬</span>
+                                <span id="preview-status-text">Exploring CrimsonFlame</span>
+                            </div>
+
+                            <div id="preview-bio" class="preview-card-bio">
+                                Welcome to my CrimsonFlame player profile!
+                            </div>
+
+                            <div class="preview-card-integrations" id="preview-integrations-container">
+                                <div id="preview-discord-chip" class="preview-integration-chip" style="display: none;">
+                                    <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" style="width: 14px;">
+                                    <span id="preview-discord-text">Discord: Unlinked</span>
+                                </div>
+                                <div id="preview-youtube-chip" class="preview-integration-chip preview-chip-yt" style="display: none;">
+                                    <svg viewBox="0 0 24 24" width="14" height="14" fill="#ef4444"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                                    <span id="preview-youtube-text">YouTube: Unlinked</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+                    </div>
+
+                </div>
+            </div>
+
+        <!-- MODAL: CREATE NEW CRIMX PAGE -->
+        <div id="modal-new-page" class="custom-modal-overlay">
+            <div class="custom-modal-box" style="max-width: 620px; width: 95%; text-align: left; padding: 28px;">
+                <div class="custom-modal-content">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                        <div>
+                            <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.45rem; font-weight: 800; color: #fff; margin: 0 0 4px;">Create New CrimX Page</h3>
+                            <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0;">Launch a custom user page hosted directly under crimx.crimsonflame.net</p>
+                        </div>
+                        <button type="button" onclick="closeNewPageModal()" style="background: none; border: none; color: var(--text-secondary); font-size: 1.3rem; cursor: pointer; padding: 4px; line-height: 1;">✕</button>
+                    </div>
+
+                    <form onsubmit="handleCreatePageSubmit(event)">
+                        <div style="margin-bottom: 14px;">
+                            <label class="form-label" style="margin-bottom: 6px; display: block; font-size: 0.8rem; font-weight: 700;">Page Title</label>
+                            <input type="text" id="new-page-title" class="settings-input" placeholder="e.g. My Mod Repository or Portfolio" required maxlength="64">
+                        </div>
+
+                        <div style="margin-bottom: 16px;">
+                            <label class="form-label" style="margin-bottom: 6px; display: block; font-size: 0.8rem; font-weight: 700;">Page Name / URL Slug</label>
+                            <div style="display: flex; align-items: center; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; padding-left: 12px;">
+                                <span style="font-family: monospace; font-size: 0.8rem; color: var(--text-secondary);" id="new-page-url-prefix">crimx.crimsonflame.net/@user/</span>
+                                <input type="text" id="new-page-slug" class="settings-input" placeholder="my-page" required maxlength="32" style="border: none; background: transparent; padding-left: 4px; font-family: monospace;" oninput="sanitizeSlugInput(this)">
+                            </div>
+                            <div style="font-size: 0.72rem; color: var(--text-secondary); margin-top: 4px;">Lowercase letters, numbers, and dashes. Use "me" for your root profile page.</div>
+                        </div>
+
+                        <div style="margin-bottom: 16px;">
+                            <label class="form-label" style="margin-bottom: 8px; display: block; font-size: 0.8rem; font-weight: 700;">Choose Template</label>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px;">
+                                <div class="template-choice-card active" id="tpl-card-repo" onclick="selectTemplateChoice('repo')">
+                                    <div style="font-size: 1.5rem; margin-bottom: 6px;">📦</div>
+                                    <div style="font-weight: 700; color: #fff; font-size: 0.9rem; margin-bottom: 4px;">Repository Page</div>
+                                    <div style="font-size: 0.74rem; color: var(--text-secondary); line-height: 1.35;">Code files table with upload/download, releases manager with asset downloads. No pull requests.</div>
+                                </div>
+
+                                <div class="template-choice-card" id="tpl-card-me" onclick="selectTemplateChoice('me')">
+                                    <div style="font-size: 1.5rem; margin-bottom: 6px;">👤</div>
+                                    <div style="font-weight: 700; color: #fff; font-size: 0.9rem; margin-bottom: 4px;">Me Page</div>
+                                    <div style="font-size: 0.74rem; color: var(--text-secondary); line-height: 1.35;">Custom gamer profile showcase with banners, status, bio, player badges & social links.</div>
+                                </div>
+
+                                <div class="template-choice-card" id="tpl-card-html" onclick="selectTemplateChoice('html')">
+                                    <div style="font-size: 1.5rem; margin-bottom: 6px;">⚡</div>
+                                    <div style="font-weight: 700; color: #fff; font-size: 0.9rem; margin-bottom: 4px;">Pure HTML</div>
+                                    <div style="font-size: 0.74rem; color: var(--text-secondary); line-height: 1.35;">Unrestricted HTML/CSS/JS sandbox. Write raw frontend code directly.</div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="new-page-template" value="repo">
+                        </div>
+
+                        <div style="margin-bottom: 18px;">
+                            <label class="form-label" style="margin-bottom: 6px; display: block; font-size: 0.8rem; font-weight: 700;">Short Description (Optional)</label>
+                            <input type="text" id="new-page-desc" class="settings-input" placeholder="Brief summary of this repository or page..." maxlength="120">
+                        </div>
+
+                        <div style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px;">
+                            <button type="button" class="btn-secondary" onclick="closeNewPageModal()" style="padding: 9px 18px; font-size: 0.85rem;">Cancel</button>
+                            <button type="submit" class="btn-primary" id="btn-create-page-submit" style="padding: 9px 24px; font-size: 0.85rem; font-weight: 700;">Create Page</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL: CRIMX PAGE STUDIO EDITOR -->
+        <div id="modal-page-editor" class="page-editor-studio-modal">
+            <div class="page-editor-studio-inner">
+                <!-- Editor Header -->
+                <div class="page-editor-header">
+                    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <h2 id="editor-page-title-display" style="font-family: 'Outfit', sans-serif; font-size: 1.4rem; font-weight: 800; color: #fff; margin: 0;">Repository Editor</h2>
+                                <span id="editor-page-template-badge" class="dash-profile-badge">📦 REPOSITORY</span>
+                                <span id="editor-page-status-badge" style="font-size: 0.72rem; padding: 2px 8px; border-radius: 6px; background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3);">● Live</span>
+                            </div>
+                            <a id="editor-page-url-link" href="#" target="_blank" style="font-family: monospace; font-size: 0.78rem; color: #f97316; text-decoration: none; margin-top: 2px; display: inline-block;">crimx.crimsonflame.net/@user/page</a>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                        <button type="button" class="btn-secondary" onclick="window.openActiveEditorPage()" style="padding: 8px 14px; font-size: 0.82rem; font-weight: 700;">
+                            👁️ Open Page ↗
+                        </button>
+                        <button type="button" class="btn-secondary" onclick="window.openActiveEditorBuildLog()" style="padding: 8px 14px; font-size: 0.82rem; font-weight: 700; color: #f97316;">
+                            🚀 Build & Deploy Log
+                        </button>
+                        <button type="button" class="btn-danger" onclick="window.deleteActiveEditorPage()" style="padding: 8px 14px; font-size: 0.82rem; font-weight: 700; background: rgba(220,38,38,0.2) !important; border-color: rgba(220,38,38,0.4) !important;">
+                            🗑️ Delete
+                        </button>
+                        <button type="button" class="btn-primary" onclick="window.saveActiveEditorPage()" style="padding: 8px 20px; font-size: 0.82rem; font-weight: 700;">
+                            💾 Save & Deploy
+                        </button>
+                        <button type="button" class="btn-secondary" onclick="window.closePageEditor()" style="padding: 8px 14px; font-size: 0.82rem;">
+                            ✕ Close
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Editor Body -->
+                <div class="page-editor-body">
+                    <!-- General Metadata Section -->
+                    <div class="settings-section-block">
+                        <div class="settings-section-title">
+                            <span>⚙️ Page Configuration</span>
+                        </div>
+                        <div class="form-group-row">
+                            <div>
+                                <label class="form-label">Page Title</label>
+                                <input type="text" id="editor-input-title" class="settings-input" placeholder="Page Title" maxlength="64">
+                            </div>
+                            <div>
+                                <label class="form-label">Description / Summary</label>
+                                <input type="text" id="editor-input-desc" class="settings-input" placeholder="Brief description..." maxlength="140">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TEMPLATE 1: REPOSITORY EDITOR PANE -->
+                    <div id="editor-pane-repo" style="display: none; flex-direction: column; gap: 20px;">
+                        <!-- File Manager -->
+                        <div class="settings-section-block">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+                                <div class="settings-section-title" style="margin-bottom: 0;">
+                                    <span>📁 Code Files (<span id="repo-file-count">0</span>)</span>
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <input type="file" id="repo-file-upload-input" multiple style="display: none;" onchange="handleRepoFilesUpload(event.target.files)">
+                                    <button type="button" class="btn-secondary" onclick="document.getElementById('repo-file-upload-input').click()" style="padding: 6px 14px; font-size: 0.8rem; font-weight: 700;">
+                                        + Upload File
+                                    </button>
+                                    <button type="button" class="btn-secondary" onclick="promptCreateNewTextFile()" style="padding: 6px 14px; font-size: 0.8rem; font-weight: 700;">
+                                        + New Text File
+                                    </button>
+                                </div>
+                            </div>
+
+                            <table class="page-editor-files-table">
+                                <thead>
+                                    <tr>
+                                        <th>File Name</th>
+                                        <th>Size</th>
+                                        <th>Type</th>
+                                        <th style="text-align: right;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="editor-repo-files-list">
+                                    <tr>
+                                        <td colspan="4" style="text-align: center; color: var(--text-secondary); padding: 24px;">No files added yet. Click "+ Upload File" or "+ New Text File".</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Releases Manager (GitHub-style releases) -->
+                        <div class="settings-section-block">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+                                <div class="settings-section-title" style="margin-bottom: 0;">
+                                    <span>🏷️ Releases & Downloads (<span id="repo-release-count">0</span>)</span>
+                                </div>
+                                <button type="button" class="btn-primary" onclick="toggleNewReleaseForm()" style="padding: 6px 14px; font-size: 0.8rem; font-weight: 700;">
+                                    + Draft Release
+                                </button>
+                            </div>
+
+                            <!-- Draft Release Form -->
+                            <div id="editor-release-draft-box" style="display: none; background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+                                <h4 style="color: #fff; font-size: 0.95rem; margin: 0 0 12px; font-weight: 700;">Draft New Release</h4>
+                                <div class="form-group-row">
+                                    <div>
+                                        <label class="form-label">Version Tag</label>
+                                        <input type="text" id="release-tag-input" class="settings-input" placeholder="e.g. v1.0.0" style="font-family: monospace;">
+                                    </div>
+                                    <div>
+                                        <label class="form-label">Release Title</label>
+                                        <input type="text" id="release-title-input" class="settings-input" placeholder="e.g. Initial Release">
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 12px;">
+                                    <label class="form-label">Changelog / Release Notes</label>
+                                    <textarea id="release-notes-input" class="settings-textarea" rows="3" placeholder="Describe the changes, new features, or fixes..."></textarea>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                                    <div style="font-size: 0.78rem; color: var(--text-secondary);">
+                                        Releases automatically package repository assets for download.
+                                    </div>
+                                    <div style="display: flex; gap: 8px;">
+                                        <button type="button" class="btn-secondary" onclick="toggleNewReleaseForm(false)" style="padding: 6px 14px; font-size: 0.8rem;">Cancel</button>
+                                        <button type="button" class="btn-primary" onclick="commitNewRelease()" style="padding: 6px 16px; font-size: 0.8rem; font-weight: 700;">Publish Release</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="editor-repo-releases-list" style="display: flex; flex-direction: column; gap: 10px;">
+                                <div style="text-align: center; color: var(--text-secondary); padding: 18px; font-size: 0.84rem;">
+                                    No releases published yet.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TEMPLATE 2: ME PAGE EDITOR PANE -->
+                    <div id="editor-pane-me" style="display: none; flex-direction: column; gap: 20px;">
+                        <div class="settings-section-block">
+                            <div class="settings-section-title">
+                                <span>👤 Profile Details</span>
+                            </div>
+                            <div class="form-group-row">
+                                <div>
+                                    <label class="form-label">Headline / Title</label>
+                                    <input type="text" id="me-page-headline-input" class="settings-input" placeholder="e.g. VR Developer & Digital Artist">
+                                </div>
+                                <div>
+                                    <label class="form-label">Custom Accent Theme</label>
+                                    <select id="me-page-theme-input" class="settings-input">
+                                        <option value="crimson">Crimson Flame (Red/Orange)</option>
+                                        <option value="purple">Cosmic Purple (Purple/Violet)</option>
+                                        <option value="blue">Deep Ocean (Cyan/Blue)</option>
+                                        <option value="emerald">Emerald Forest (Green)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 14px;">
+                                <label class="form-label">Extended About / Biography</label>
+                                <textarea id="me-page-bio-input" class="settings-textarea" rows="4" placeholder="Share more about yourself, your projects, and what you build..."></textarea>
+                            </div>
+                            <div>
+                                <label class="form-label">Featured Projects / External Links (One per line: Label | URL)</label>
+                                <textarea id="me-page-links-input" class="settings-textarea" rows="3" placeholder="GitHub | https://github.com/myuser&#10;YouTube | https://youtube.com/@channel&#10;Portfolio | https://mywebsite.com"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TEMPLATE 3: PURE HTML EDITOR PANE -->
+                    <div id="editor-pane-html" style="display: none; flex-direction: column; gap: 20px;">
+                        <div class="settings-section-block">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <div class="settings-section-title" style="margin-bottom: 0;">
+                                    <span>⚡ Pure HTML / CSS / JS Sandbox</span>
+                                </div>
+                                <button type="button" class="btn-secondary" onclick="updatePureHtmlPreview()" style="padding: 6px 14px; font-size: 0.8rem; font-weight: 700;">
+                                    🔄 Update Preview
+                                </button>
+                            </div>
+                            <textarea id="editor-pure-html-code" class="settings-textarea" rows="12" style="font-family: monospace; font-size: 0.85rem; background: #070305; border-color: rgba(255,255,255,0.12);" placeholder="<!DOCTYPE html>&#10;<html>&#10;<head>&#10;  <style>body { color: white; font-family: sans-serif; }</style>&#10;</head>&#10;<body>&#10;  <h1>Welcome to my custom CrimX Page!</h1>&#10;</body>&#10;</html>"></textarea>
+                        </div>
+
+                        <!-- Live Preview Box -->
+                        <div class="settings-section-block">
+                            <div class="settings-section-title">
+                                <span>● Live Sandbox Preview</span>
+                            </div>
+                            <div style="border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); background: #0d0609; height: 320px;">
+                                <iframe id="editor-pure-html-preview" style="width: 100%; height: 100%; border: none; background: #0d0609;"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Toast Container -->
+        <div id="toast-container"></div>
+    </main>
+
+    <div id="custom-alert" class="custom-modal-overlay">
+        <div class="custom-modal-box">
+            <div class="custom-modal-content">
+                <h3 class="custom-modal-title">Alert</h3>
+                <p id="custom-alert-message" class="custom-modal-text"></p>
+                <button onclick="document.getElementById('custom-alert').classList.remove('active')" class="custom-modal-btn confirm" style="width: 100%;">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <p>© 2026 <strong>CrimsonFlame</strong>. All rights reserved. |
+            <a href="https://youtube.com/@crimsonflameofficial" target="_blank">
+                <svg viewBox="0 0 24 24" fill="currentColor" style="width: 16px; height: 16px;">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+                YouTube
+            </a>
+        </p>
+    </footer>
+
+    <script>
+    // Floating particles
+    (function() {
+        const c = document.getElementById('particles');
+        for (let i = 0; i < 25; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const s = Math.random() * 3 + 1;
+            p.style.width = s + 'px';
+            p.style.height = s + 'px';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.top = Math.random() * 100 + '%';
+            p.style.animationDuration = (Math.random() * 12 + 8) + 's';
+            p.style.animationDelay = (Math.random() * 8) + 's';
+            p.style.opacity = Math.random() * 0.4 + 0.1;
+            c.appendChild(p);
+        }
+    })();
+
+    // Exit CrimX Subdomain handler
+    window.exitCrimX = function(event) {
+        if (event) event.preventDefault();
+        if (window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1')) {
+            const port = window.location.port ? ':' + window.location.port : '';
+            window.location.href = window.location.protocol + '//localhost' + port + '/';
+        } else {
+            window.location.href = 'https://crimsonflame.net/';
+        }
+    };
+    </script>
+
+    <!-- Top Right CIM Instant Messager Notification Container -->
+    <div id="cim-notification-container" class="cim-notification-container"></div>
+
+    <script type="module" src="/dashboard.js"></script>
+</body>
+</html>
